@@ -1,6 +1,8 @@
 export type IntentType = "swap" | "limit" | "twap";
 export type Direction = "buy" | "sell";
 
+import type { ZKProof } from "./proof";
+
 export interface Intent {
   id: string;
   owner: string;
@@ -33,12 +35,6 @@ export interface IntentExecution {
   proof: ZKProof;
   solverAddress: string;
   txDigest: string;
-}
-
-export interface ZKProof {
-  publicInputs: string[];
-  proofBytes: Uint8Array;
-  verificationKey: string;
 }
 
 export interface IntentSubmission {
