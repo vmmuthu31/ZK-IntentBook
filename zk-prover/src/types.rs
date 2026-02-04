@@ -95,7 +95,7 @@ impl Execution {
             ));
         }
 
-        let current_time = std::time::SystemTime::now()
+        let _current_time = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map(|d| d.as_secs())
             .unwrap_or(0);

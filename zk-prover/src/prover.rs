@@ -1,12 +1,11 @@
 use anyhow::{anyhow, Result};
-use p3_baby_bear::BabyBear;
+use p3_baby_bear::{BabyBear, Poseidon2BabyBear, default_babybear_poseidon2_16};
 use p3_challenger::DuplexChallenger;
 use p3_commit::ExtensionMmcs;
 use p3_field::extension::BinomialExtensionField;
 use p3_field::Field;
-use p3_fri::TwoAdicFriPcs;
+use p3_fri::{FriParameters, TwoAdicFriPcs};
 use p3_merkle_tree::MerkleTreeMmcs;
-use p3_poseidon2::Poseidon2;
 use p3_symmetric::{PaddingFreeSponge, TruncatedPermutation};
 use p3_uni_stark::StarkConfig;
 use sha2::{Digest, Sha256};
@@ -17,7 +16,7 @@ use crate::types::{Execution, Intent, ProofResponse, PublicInputs};
 
 type Val = BabyBear;
 type Challenge = BinomialExtensionField<Val, 4>;
-type Perm = Poseidon2<Val, p3_poseidon2::DiffusionMatrixBabyBear, 16, 7>;
+type Perm = Poseidon2BabyBear<16>;
 type MyHash = PaddingFreeSponge<Perm, 16, 8, 8>;
 type MyCompress = TruncatedPermutation<Perm, 2, 8, 16>;
 type ValMmcs = MerkleTreeMmcs<
@@ -35,7 +34,7 @@ type MyStarkConfig = StarkConfig<Pcs, Challenge, Challenger>;
 
 pub struct IntentProver {
     _config: MyStarkConfig,
-    perm: Perm,
+    _perm: Perm,
 }
 
 impl Default for IntentProver {
@@ -49,29 +48,28 @@ impl IntentProver {
         let (config, perm) = Self::create_config();
         Self {
             _config: config,
-            perm,
+            _perm: perm,
         }
     }
 
     fn create_config() -> (MyStarkConfig, Perm) {
-        let perm = Perm::new_from_rng_128(
-            p3_poseidon2::DiffusionMatrixBabyBear::default(),
-            &mut rand::thread_rng(),
-        );
+        let perm = default_babybear_poseidon2_16();
         let hash = MyHash::new(perm.clone());
         let compress = MyCompress::new(perm.clone());
         let val_mmcs = ValMmcs::new(hash, compress);
         let challenge_mmcs = ChallengeMmcs::new(val_mmcs.clone());
         let dft = Dft::default();
 
-        let fri_config = p3_fri::FriConfig {
+        let fri_params = FriParameters {
             log_blowup: 1,
+            log_final_poly_len: 0,
             num_queries: 100,
-            proof_of_work_bits: 16,
+            commit_proof_of_work_bits: 0,
+            query_proof_of_work_bits: 16,
             mmcs: challenge_mmcs,
         };
 
-        let pcs = Pcs::new(dft, val_mmcs, fri_config);
+        let pcs = Pcs::new(dft, val_mmcs, fri_params);
         let challenger = DuplexChallenger::new(perm.clone());
 
         (StarkConfig::new(pcs, challenger), perm)

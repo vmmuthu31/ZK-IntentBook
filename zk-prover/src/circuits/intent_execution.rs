@@ -1,5 +1,5 @@
 use p3_air::{Air, AirBuilder, BaseAir};
-use p3_field::{Field, PrimeField64};
+use p3_field::{Field, PrimeCharacteristicRing, PrimeField64};
 use p3_matrix::dense::RowMajorMatrix;
 use p3_matrix::Matrix;
 use std::marker::PhantomData;
@@ -83,29 +83,31 @@ impl<F: Field> BaseAir<F> for IntentExecutionAir<F> {
 impl<AB: AirBuilder> Air<AB> for IntentExecutionAir<AB::F>
 where
     AB::F: Field,
+    AB::Expr: PrimeCharacteristicRing,
+    AB::Var: Clone,
 {
     fn eval(&self, builder: &mut AB) {
         let main = builder.main();
         let local = main.row_slice(0);
         let local = local.expect("main trace should have at least one row");
 
-        let input_amount = local[0];
-        let output_amount = local[1];
-        let min_output = local[2];
-        let max_input = local[3];
-        let _timestamp = local[4];
-        let _deadline = local[5];
-        let output_ok = local[14];
-        let input_ok = local[15];
+        let input_amount = local[0].clone();
+        let output_amount = local[1].clone();
+        let min_output = local[2].clone();
+        let max_input = local[3].clone();
+        let _timestamp = local[4].clone();
+        let _deadline = local[5].clone();
+        let output_ok = local[14].clone();
+        let input_ok = local[15].clone();
 
-        builder.assert_bool(output_ok);
-        builder.assert_bool(input_ok);
+        builder.assert_bool(output_ok.clone());
+        builder.assert_bool(input_ok.clone());
 
         let output_diff = output_amount - min_output;
-        builder.when(output_ok).assert_zero(output_diff * (AB::Expr::ONE - output_ok));
+        builder.when(output_ok.clone()).assert_zero(output_diff * (AB::Expr::ONE - output_ok.clone().into()));
 
         let input_diff = max_input - input_amount;
-        builder.when(input_ok).assert_zero(input_diff * (AB::Expr::ONE - input_ok));
+        builder.when(input_ok.clone()).assert_zero(input_diff * (AB::Expr::ONE - input_ok.clone().into()));
 
         builder.assert_one(output_ok);
         builder.assert_one(input_ok);
@@ -121,6 +123,7 @@ pub struct IntentExecutionWitness {
     pub timestamp: u64,
     pub deadline: u64,
     pub commitment: [u8; 32],
+    #[allow(dead_code)]
     pub pool_id_hash: [u8; 32],
 }
 
