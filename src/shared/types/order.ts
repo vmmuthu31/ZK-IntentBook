@@ -1,18 +1,3 @@
-export interface OrderBookLevel {
-  price: bigint;
-  quantity: bigint;
-}
-
-export interface OrderBook {
-  poolId: string;
-  baseAsset: string;
-  quoteAsset: string;
-  bids: OrderBookLevel[];
-  asks: OrderBookLevel[];
-  midPrice: bigint;
-  timestamp: number;
-}
-
 export interface Order {
   orderId: string;
   balanceManagerId: string;
