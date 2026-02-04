@@ -60,3 +60,8 @@ export function formatTimestamp(timestamp: number): string {
 export function formatPercentage(value: number, decimals = 2): string {
   return `${(value * 100).toFixed(decimals)}%`;
 }
+
+export function formatAmount(amount: string, decimals: number): string {
+  const value = BigInt(amount);
+  return formatBalance(value, decimals);
+}
