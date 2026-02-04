@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowDownUp, Settings } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowDownUp, Settings, Loader2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,16 +12,93 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ASSET_LIST, AssetConfig } from "@/shared/constants";
-import { useIntentWallet } from "@/client/hooks";
+import { ASSET_LIST, AssetConfig, POOL_LIST } from "@/shared/constants";
+import { useIntentWallet, useAllBalances } from "@/client/hooks";
+import { DEEPBOOK_INDEXER_URL } from "@/shared/constants/pools";
+
+interface PoolData {
+  pool_id: string;
+  pool_name: string;
+  base_asset_symbol: string;
+  quote_asset_symbol: string;
+}
 
 export function SimpleSwap() {
   const { connected } = useIntentWallet();
-  const [fromAsset, setFromAsset] = useState<AssetConfig>(ASSET_LIST[1]);
-  const [toAsset, setToAsset] = useState<AssetConfig>(ASSET_LIST[0]);
+  const { getBalance, loading: balancesLoading } = useAllBalances();
+  const [fromAsset, setFromAsset] = useState<AssetConfig>(ASSET_LIST[0]);
+  const [toAsset, setToAsset] = useState<AssetConfig>(
+    ASSET_LIST[1] || ASSET_LIST[0],
+  );
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [slippage, setSlippage] = useState("0.5");
+  const [rate, setRate] = useState<string | null>(null);
+  const [poolData, setPoolData] = useState<PoolData[]>([]);
+  const [loadingRate, setLoadingRate] = useState(false);
+
+  useEffect(() => {
+    async function fetchPools() {
+      try {
+        const response = await fetch(`${DEEPBOOK_INDEXER_URL}/get_pools`);
+        const data = await response.json();
+        setPoolData(data);
+      } catch (error) {
+        console.error("Failed to fetch pools:", error);
+      }
+    }
+    fetchPools();
+  }, []);
+
+  useEffect(() => {
+    async function fetchRate() {
+      if (!fromAsset || !toAsset || fromAsset.symbol === toAsset.symbol) {
+        setRate(null);
+        return;
+      }
+
+      const poolName = `${fromAsset.symbol}_${toAsset.symbol}`;
+      const reversePoolName = `${toAsset.symbol}_${fromAsset.symbol}`;
+
+      const pool =
+        poolData.find((p) => p.pool_name === poolName) ||
+        poolData.find((p) => p.pool_name === reversePoolName);
+
+      if (!pool) {
+        setRate(null);
+        return;
+      }
+
+      setLoadingRate(true);
+      try {
+        const response = await fetch(
+          `${DEEPBOOK_INDEXER_URL}/get_net_price/${pool.pool_id}`,
+        );
+        const data = await response.json();
+        const price = parseFloat(data.mid_price || data.price || "0");
+
+        if (pool.pool_name === reversePoolName && price > 0) {
+          setRate((1 / price).toFixed(6));
+        } else {
+          setRate(price.toFixed(6));
+        }
+      } catch {
+        setRate(null);
+      } finally {
+        setLoadingRate(false);
+      }
+    }
+    fetchRate();
+  }, [fromAsset, toAsset, poolData]);
+
+  useEffect(() => {
+    if (fromAmount && rate) {
+      const calculated = parseFloat(fromAmount) * parseFloat(rate);
+      setToAmount(calculated.toFixed(6));
+    } else {
+      setToAmount("");
+    }
+  }, [fromAmount, rate]);
 
   const handleSwapDirection = () => {
     setFromAsset(toAsset);
@@ -29,6 +106,9 @@ export function SimpleSwap() {
     setFromAmount(toAmount);
     setToAmount(fromAmount);
   };
+
+  const fromBalance = getBalance(fromAsset.symbol);
+  const toBalance = getBalance(toAsset.symbol);
 
   return (
     <Card className="bg-slate-900/50 border-white/5 backdrop-blur-sm max-w-md mx-auto">
@@ -51,7 +131,8 @@ export function SimpleSwap() {
             amount={fromAmount}
             onAmountChange={setFromAmount}
             onAssetChange={setFromAsset}
-            balance="1,234.56"
+            balance={fromBalance.formatted}
+            balanceLoading={balancesLoading || fromBalance.loading}
           />
 
           <div className="flex justify-center -my-2 relative z-10">
@@ -71,7 +152,8 @@ export function SimpleSwap() {
             amount={toAmount}
             onAmountChange={setToAmount}
             onAssetChange={setToAsset}
-            balance="5,678.90"
+            balance={toBalance.formatted}
+            balanceLoading={balancesLoading || toBalance.loading}
             readonly
           />
         </div>
@@ -80,7 +162,13 @@ export function SimpleSwap() {
           <div className="flex items-center justify-between text-sm">
             <span className="text-slate-400">Rate</span>
             <span className="text-white">
-              1 {fromAsset.symbol} ≈ 2.45 {toAsset.symbol}
+              {loadingRate ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : rate ? (
+                `1 ${fromAsset.symbol} ≈ ${rate} ${toAsset.symbol}`
+              ) : (
+                "No pool available"
+              )}
             </span>
           </div>
           <div className="flex items-center justify-between text-sm mt-2">
@@ -95,13 +183,15 @@ export function SimpleSwap() {
 
         <Button
           className="w-full mt-6 h-12 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium rounded-xl transition-all"
-          disabled={!connected || !fromAmount}
+          disabled={!connected || !fromAmount || !rate}
         >
           {!connected
             ? "Connect Wallet"
             : !fromAmount
               ? "Enter Amount"
-              : "Swap"}
+              : !rate
+                ? "No Pool Available"
+                : "Swap"}
         </Button>
       </CardContent>
     </Card>
@@ -115,6 +205,7 @@ interface TokenInputProps {
   onAmountChange: (value: string) => void;
   onAssetChange: (asset: AssetConfig) => void;
   balance?: string;
+  balanceLoading?: boolean;
   readonly?: boolean;
 }
 
@@ -125,17 +216,21 @@ function TokenInput({
   onAmountChange,
   onAssetChange,
   balance,
+  balanceLoading,
   readonly,
 }: TokenInputProps) {
   return (
     <div className="p-4 rounded-xl bg-slate-800/50 border border-white/5">
       <div className="flex items-center justify-between mb-2">
         <span className="text-sm text-slate-400">{label}</span>
-        {balance && (
-          <span className="text-sm text-slate-400">
-            Balance: <span className="text-white">{balance}</span>
-          </span>
-        )}
+        <span className="text-sm text-slate-400">
+          Balance:{" "}
+          {balanceLoading ? (
+            <Loader2 className="inline h-3 w-3 animate-spin" />
+          ) : (
+            <span className="text-white">{balance || "0.00"}</span>
+          )}
+        </span>
       </div>
       <div className="flex items-center gap-3">
         <Input

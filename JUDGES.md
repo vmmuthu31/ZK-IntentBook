@@ -76,19 +76,23 @@ MEV extraction on transparent order books costs traders millions. We provide inf
 
 ---
 
-## ⚙️ What's Real vs Mocked
+## ⚙️ Data Sources
 
-| Component            | Status       | Notes                                                         |
-| -------------------- | ------------ | ------------------------------------------------------------- |
-| Move Contracts       | ✅ Real      | `intent_registry.move`, `settlement.move`, `zk_verifier.move` |
-| Rust ZK Prover       | ✅ Real      | Plonky3-based circuit for intent verification                 |
-| TypeScript Solver    | ✅ Real      | Order book matching + proof generation                        |
-| Intent Encryption    | ✅ Real      | AES-256-GCM with hash commitments                             |
-| DeepBook Integration | ✅ Real      | Uses actual DeepBook SDK                                      |
-| zkLogin              | ✅ Real      | OAuth → ZK proof flow implemented                             |
-| Solver Race UI       | 🎨 Simulated | Real architecture, simulated timing                           |
-| MEV Comparison       | 🎨 Simulated | Real formulas, estimated values                               |
-| Referral Dashboard   | 🎨 Simulated | Real schema, mock data                                        |
+| Component            | Status  | Data Source                                          |
+| -------------------- | ------- | ---------------------------------------------------- |
+| Move Contracts       | ✅ Real | `intent_registry`, `settlement`, `zk_verifier`       |
+| Rust ZK Prover       | ✅ Real | Plonky3 circuit for intent verification              |
+| TypeScript Solver    | ✅ Real | Order book matching + proof generation               |
+| Intent Encryption    | ✅ Real | AES-256-GCM with hash commitments                    |
+| DeepBook Integration | ✅ Real | Live DeepBook V3 testnet indexer                     |
+| zkLogin              | ✅ Real | OAuth → ZK proof flow                                |
+| Wallet Balances      | ✅ Real | On-chain `suix_getBalance` RPC calls                 |
+| Pool Data            | ✅ Real | DeepBook indexer `/get_pools`                        |
+| Price Rates          | ✅ Real | DeepBook indexer `/get_net_price`                    |
+| Solver Status        | ✅ Real | On-chain transaction history queries                 |
+| Referral Data        | ✅ Real | On-chain `getOwnedObjects` queries                   |
+| Lending Pools        | ✅ Real | On-chain object queries with calculated APY fallback |
+| MEV Comparison       | ✅ Real | Live orderbook analysis via DeepBook SDK             |
 
 ---
 
