@@ -426,7 +426,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact & Support
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/yourusername/zk-intentbook/issues)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/vmmuthu31/zk-intentbook/issues)
 - **Discord**: [Join our community](#)
 - **Twitter**: [@zkintentbook](#)
 - **Documentation**: [Full docs](#)
