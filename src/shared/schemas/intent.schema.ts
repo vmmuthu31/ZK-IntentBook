@@ -4,7 +4,7 @@ export const IntentTypeSchema = z.enum(["swap", "limit", "twap"]);
 export const DirectionSchema = z.enum(["buy", "sell"]);
 
 export const CreateIntentSchema = z.object({
-  intentType: IntentTypeSchema.default("swap"),
+  intentType: IntentTypeSchema,
   baseAsset: z.string().min(1),
   quoteAsset: z.string().min(1),
   poolId: z.string().min(1),
@@ -38,8 +38,8 @@ export const CreateIntentSchema = z.object({
         return false;
       }
     }, "Must be a positive integer"),
-  deadlineSeconds: z.number().int().positive().max(3600).default(30),
-  mevProtection: z.boolean().default(true),
+  deadlineSeconds: z.number().int().positive().max(3600),
+  mevProtection: z.boolean(),
 });
 
 export const EncryptedIntentSchema = z.object({
