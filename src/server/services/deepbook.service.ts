@@ -1,6 +1,6 @@
 import { SuiJsonRpcClient } from "@mysten/sui/jsonRpc";
 import { DeepBookClient } from "@mysten/deepbook-v3";
-import { getSuiClient } from "../config/sui";
+import { getSuiClient, getNetwork } from "../config/sui";
 import type { OrderBook, OrderBookLevel } from "@/shared/types/orderbook";
 
 export class DeepBookService {
@@ -9,32 +9,31 @@ export class DeepBookService {
 
   constructor() {
     this.suiClient = getSuiClient();
+    const network = getNetwork();
     this.deepBookClient = new DeepBookClient({
+      address: "0x0",
       client: this.suiClient,
-      env:
-        process.env.NEXT_PUBLIC_SUI_NETWORK === "mainnet"
-          ? "mainnet"
-          : "testnet",
+      network: network === "mainnet" ? "mainnet" : "testnet",
     });
   }
 
   async getOrderBook(poolId: string, ticks: number = 20): Promise<OrderBook> {
     try {
-      const orderBookData = await this.deepBookClient.getLevel2Range({
+      const level2Data = await this.deepBookClient.getLevel2TicksFromMid(
         poolId,
-        ticksFromMid: ticks,
-      });
+        ticks,
+      );
 
-      const bids: OrderBookLevel[] = orderBookData.bids.map((bid) => ({
-        price: bid.price,
-        quantity: bid.quantity,
-        total: bid.price * bid.quantity,
+      const bids: OrderBookLevel[] = level2Data.bid_prices.map((price, i) => ({
+        price,
+        quantity: level2Data.bid_quantities[i],
+        total: price * level2Data.bid_quantities[i],
       }));
 
-      const asks: OrderBookLevel[] = orderBookData.asks.map((ask) => ({
-        price: ask.price,
-        quantity: ask.quantity,
-        total: ask.price * ask.quantity,
+      const asks: OrderBookLevel[] = level2Data.ask_prices.map((price, i) => ({
+        price,
+        quantity: level2Data.ask_quantities[i],
+        total: price * level2Data.ask_quantities[i],
       }));
 
       const midPrice = this.calculateMidPrice(bids, asks);
@@ -56,7 +55,7 @@ export class DeepBookService {
 
   async getPoolInfo(poolId: string) {
     try {
-      return await this.deepBookClient.getPool(poolId);
+      return await this.deepBookClient.whitelisted(poolId);
     } catch (error) {
       console.error("Failed to fetch pool info:", error);
       throw new Error(`Failed to fetch pool info for ${poolId}`);

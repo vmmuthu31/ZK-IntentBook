@@ -56,10 +56,6 @@ proptest = "1.0"
 name = "prover-service"
 path = "src/main.rs"
 
-[[bench]]
-name = "proof_generation"
-harness = false
-
 [profile.release]
 opt-level = 3
 lto = "fat"
