@@ -2,13 +2,16 @@ import { SuiJsonRpcClient } from "@mysten/sui/jsonRpc";
 import { DeepBookClient } from "@mysten/deepbook-v3";
 import { getSuiClient, getNetwork } from "../config/sui";
 import type { OrderBook, OrderBookLevel } from "@/shared/types/orderbook";
+import { POOLS, DEEPBOOK_INDEXER_URL } from "@/shared/constants/pools";
 
 export class DeepBookService {
   private suiClient: SuiJsonRpcClient;
   private deepBookClient: DeepBookClient;
+  private indexerUrl: string;
 
   constructor() {
     this.suiClient = getSuiClient();
+    this.indexerUrl = DEEPBOOK_INDEXER_URL;
     const network = getNetwork();
     this.deepBookClient = new DeepBookClient({
       address: "0x0",
@@ -19,22 +22,35 @@ export class DeepBookService {
 
   async getOrderBook(poolKey: string, ticks: number = 20): Promise<OrderBook> {
     try {
-      const level2Data = await this.deepBookClient.getLevel2TicksFromMid(
-        poolKey,
-        ticks,
+      const pool = POOLS[poolKey];
+      if (!pool) {
+        throw new Error(`Pool ${poolKey} not found in configuration`);
+      }
+
+      const response = await fetch(
+        `${this.indexerUrl}/get_order_book/${pool.id}`,
+      );
+      if (!response.ok) {
+        throw new Error(`Indexer returned ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      const bids: OrderBookLevel[] = (data.bids || []).map(
+        (b: { price: number; quantity: number }) => ({
+          price: b.price,
+          quantity: b.quantity,
+          total: b.price * b.quantity,
+        }),
       );
 
-      const bids: OrderBookLevel[] = level2Data.bid_prices.map((price, i) => ({
-        price,
-        quantity: level2Data.bid_quantities[i],
-        total: price * level2Data.bid_quantities[i],
-      }));
-
-      const asks: OrderBookLevel[] = level2Data.ask_prices.map((price, i) => ({
-        price,
-        quantity: level2Data.ask_quantities[i],
-        total: price * level2Data.ask_quantities[i],
-      }));
+      const asks: OrderBookLevel[] = (data.asks || []).map(
+        (a: { price: number; quantity: number }) => ({
+          price: a.price,
+          quantity: a.quantity,
+          total: a.price * a.quantity,
+        }),
+      );
 
       const midPrice = this.calculateMidPrice(bids, asks);
       const spread = this.calculateSpread(bids, asks);
@@ -74,7 +90,20 @@ export class DeepBookService {
 
   async getMidPrice(poolKey: string): Promise<number> {
     try {
-      return await this.deepBookClient.midPrice(poolKey);
+      const pool = POOLS[poolKey];
+      if (!pool) {
+        throw new Error(`Pool ${poolKey} not found`);
+      }
+
+      const response = await fetch(
+        `${this.indexerUrl}/get_net_price/${pool.id}`,
+      );
+      if (!response.ok) {
+        throw new Error(`Indexer returned ${response.status}`);
+      }
+
+      const data = await response.json();
+      return parseFloat(data.mid_price || data.price || "0");
     } catch (error) {
       console.error("Failed to fetch mid price:", error);
       throw new Error(`Failed to fetch mid price for pool ${poolKey}`);
