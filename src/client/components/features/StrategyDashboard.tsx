@@ -67,13 +67,13 @@ function MarketMakerCard({
 
   return (
     <Card
-      className={`bg-zinc-900/50 border-zinc-800 ${mm.isActive ? "border-green-500/30" : ""}`}
+      className={`bg-slate-900/50 border-slate-800 ${mm.isActive ? "border-green-500/30" : ""}`}
     >
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-3">
           <div>
             <h3 className="font-bold text-lg">{mm.pair}</h3>
-            <p className="text-xs text-zinc-500 font-mono">
+            <p className="text-xs text-slate-500 font-mono">
               {mm.id.slice(0, 10)}...
             </p>
           </div>
@@ -96,52 +96,52 @@ function MarketMakerCard({
         </div>
 
         <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="p-2 bg-zinc-800/50 rounded text-center">
-            <p className="text-xs text-zinc-500">Bid</p>
+          <div className="p-2 bg-slate-800/50 rounded text-center">
+            <p className="text-xs text-slate-500">Bid</p>
             <p className="font-bold text-green-400">${bidPrice.toFixed(4)}</p>
           </div>
-          <div className="p-2 bg-zinc-800/50 rounded text-center">
-            <p className="text-xs text-zinc-500">Mid</p>
+          <div className="p-2 bg-slate-800/50 rounded text-center">
+            <p className="text-xs text-slate-500">Mid</p>
             <p className="font-bold">${mm.midPrice.toFixed(4)}</p>
           </div>
-          <div className="p-2 bg-zinc-800/50 rounded text-center">
-            <p className="text-xs text-zinc-500">Ask</p>
+          <div className="p-2 bg-slate-800/50 rounded text-center">
+            <p className="text-xs text-slate-500">Ask</p>
             <p className="font-bold text-red-400">${askPrice.toFixed(4)}</p>
           </div>
         </div>
 
         <div className="space-y-2 text-sm">
           <div className="flex justify-between">
-            <span className="text-zinc-400">Spread</span>
+            <span className="text-slate-400">Spread</span>
             <span>
               {mm.spreadBps} bps ({spread.toFixed(2)}%)
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">Order Size</span>
+            <span className="text-slate-400">Order Size</span>
             <span>{formatNumber(mm.orderSize)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">Base Balance</span>
+            <span className="text-slate-400">Base Balance</span>
             <span>{formatNumber(mm.baseBalance)}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-zinc-400">Quote Balance</span>
+            <span className="text-slate-400">Quote Balance</span>
             <span>${formatNumber(mm.quoteBalance)}</span>
           </div>
         </div>
 
-        <div className="mt-4 pt-3 border-t border-zinc-800 grid grid-cols-3 gap-2 text-center">
+        <div className="mt-4 pt-3 border-t border-slate-800 grid grid-cols-3 gap-2 text-center">
           <div>
-            <p className="text-xs text-zinc-500">Trades</p>
+            <p className="text-xs text-slate-500">Trades</p>
             <p className="font-bold">{mm.totalTrades}</p>
           </div>
           <div>
-            <p className="text-xs text-zinc-500">Volume</p>
+            <p className="text-xs text-slate-500">Volume</p>
             <p className="font-bold">${formatNumber(mm.totalVolume)}</p>
           </div>
           <div>
-            <p className="text-xs text-zinc-500">PnL</p>
+            <p className="text-xs text-slate-500">PnL</p>
             <p
               className={`font-bold ${mm.totalPnL >= 0 ? "text-green-400" : "text-red-400"}`}
             >
@@ -160,7 +160,7 @@ function ArbitrageMonitor({
   opportunities: ArbitrageOpportunity[];
 }) {
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-slate-900/50 border-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Zap className="h-5 w-5 text-yellow-400" />
@@ -169,7 +169,7 @@ function ArbitrageMonitor({
       </CardHeader>
       <CardContent>
         {opportunities.length === 0 ? (
-          <div className="text-center py-8 text-zinc-500">
+          <div className="text-center py-8 text-slate-500">
             <Activity className="h-8 w-8 mx-auto mb-2 opacity-50" />
             <p>Scanning for opportunities...</p>
           </div>
@@ -178,7 +178,7 @@ function ArbitrageMonitor({
             {opportunities.map((opp) => (
               <div
                 key={opp.id}
-                className="p-3 bg-zinc-800/50 rounded-lg flex items-center justify-between"
+                className="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between"
               >
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-yellow-500/10 rounded">
@@ -188,7 +188,7 @@ function ArbitrageMonitor({
                     <p className="font-bold">
                       {opp.sourcePair} → {opp.targetPair}
                     </p>
-                    <p className="text-xs text-zinc-500">
+                    <p className="text-xs text-slate-500">
                       Required: ${formatNumber(opp.requiredCapital)}
                     </p>
                   </div>
@@ -232,7 +232,7 @@ function CrossPoolRebalancer({
   const isValid = Math.abs(totalAllocation - 100) < 0.1;
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-slate-900/50 border-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BarChart3 className="h-5 w-5 text-cyan-400" />
@@ -269,7 +269,7 @@ function CrossPoolRebalancer({
               />
             </div>
 
-            <div className="flex justify-between text-xs text-zinc-500">
+            <div className="flex justify-between text-xs text-slate-500">
               <span>Current: {alloc.currentAllocation}%</span>
               <span
                 className={
@@ -297,9 +297,9 @@ function CrossPoolRebalancer({
           </div>
         ))}
 
-        <div className="pt-4 border-t border-zinc-800">
+        <div className="pt-4 border-t border-slate-800">
           <div className="flex justify-between items-center mb-4">
-            <span className="text-zinc-400">Total Allocation</span>
+            <span className="text-slate-400">Total Allocation</span>
             <span
               className={`font-bold ${isValid ? "text-green-400" : "text-red-400"}`}
             >
@@ -324,7 +324,7 @@ function CreateMarketMaker() {
   const [quoteAmount, setQuoteAmount] = useState("");
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-slate-900/50 border-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Settings className="h-5 w-5 text-cyan-400" />
@@ -333,7 +333,7 @@ function CreateMarketMaker() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm text-zinc-400 block mb-2">
+          <label className="text-sm text-slate-400 block mb-2">
             Trading Pair
           </label>
           <select
@@ -341,7 +341,7 @@ function CreateMarketMaker() {
             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               setPair(e.target.value)
             }
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2"
           >
             <option value="SUI/USDC">SUI/USDC</option>
             <option value="DEEP/SUI">DEEP/SUI</option>
@@ -350,7 +350,7 @@ function CreateMarketMaker() {
         </div>
 
         <div>
-          <label className="text-sm text-zinc-400 block mb-2">
+          <label className="text-sm text-slate-400 block mb-2">
             Spread: {spreadBps} bps ({(spreadBps / 100).toFixed(2)}%)
           </label>
           <Slider
@@ -360,7 +360,7 @@ function CreateMarketMaker() {
             max={500}
             step={5}
           />
-          <div className="flex justify-between text-xs text-zinc-500 mt-1">
+          <div className="flex justify-between text-xs text-slate-500 mt-1">
             <span>5 bps (tight)</span>
             <span>500 bps (wide)</span>
           </div>
@@ -368,7 +368,7 @@ function CreateMarketMaker() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm text-zinc-400 block mb-2">
+            <label className="text-sm text-slate-400 block mb-2">
               Base Amount
             </label>
             <Input
@@ -378,11 +378,11 @@ function CreateMarketMaker() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setBaseAmount(e.target.value)
               }
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-slate-800 border-slate-700"
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 block mb-2">
+            <label className="text-sm text-slate-400 block mb-2">
               Quote Amount
             </label>
             <Input
@@ -392,13 +392,13 @@ function CreateMarketMaker() {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setQuoteAmount(e.target.value)
               }
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-slate-800 border-slate-700"
             />
           </div>
         </div>
 
         <div>
-          <label className="text-sm text-zinc-400 block mb-2">Order Size</label>
+          <label className="text-sm text-slate-400 block mb-2">Order Size</label>
           <Input
             type="number"
             placeholder="100"
@@ -406,7 +406,7 @@ function CreateMarketMaker() {
             onChange={(e: ChangeEvent<HTMLInputElement>) =>
               setOrderSize(e.target.value)
             }
-            className="bg-zinc-800 border-zinc-700"
+            className="bg-slate-800 border-slate-700"
           />
         </div>
 
@@ -512,7 +512,7 @@ export function StrategyDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Advanced Strategies</h2>
-          <p className="text-zinc-400">
+          <p className="text-slate-400">
             AMM, arbitrage, and cross-pool management
           </p>
         </div>
@@ -525,7 +525,7 @@ export function StrategyDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-zinc-900/50">
+        <TabsList className="bg-slate-900/50">
           <TabsTrigger value="mm">Market Making</TabsTrigger>
           <TabsTrigger value="arb">Arbitrage</TabsTrigger>
           <TabsTrigger value="rebalance">Cross-Pool</TabsTrigger>

@@ -39,49 +39,49 @@ export default function Home() {
           <TabsList className=" w-full  bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto mb-8">
             <TabsTrigger
               value="trade"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Shield className="h-4 w-4" />
               <span className="hidden sm:inline">Trade</span>
             </TabsTrigger>
             <TabsTrigger
               value="compare"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Compare</span>
             </TabsTrigger>
             <TabsTrigger
               value="lending"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Landmark className="h-4 w-4" />
               <span className="hidden sm:inline">Lending</span>
             </TabsTrigger>
             <TabsTrigger
               value="strategies"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <TrendingUp className="h-4 w-4" />
               <span className="hidden sm:inline">Strategies</span>
             </TabsTrigger>
             <TabsTrigger
               value="solvers"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Solvers</span>
             </TabsTrigger>
             <TabsTrigger
               value="referrals"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Coins className="h-4 w-4" />
               <span className="hidden sm:inline">Referrals</span>
             </TabsTrigger>
             <TabsTrigger
               value="why-sui"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 text-slate-400 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Zap className="h-4 w-4" />
               <span className="hidden sm:inline">Why Sui</span>

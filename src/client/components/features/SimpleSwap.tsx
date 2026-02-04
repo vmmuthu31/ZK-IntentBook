@@ -26,25 +26,41 @@ interface PoolData {
 export function SimpleSwap() {
   const { connected } = useIntentWallet();
   const { getBalance, loading: balancesLoading } = useAllBalances();
-  const [fromAsset, setFromAsset] = useState<AssetConfig>(ASSET_LIST[0]);
-  const [toAsset, setToAsset] = useState<AssetConfig>(
-    ASSET_LIST[1] || ASSET_LIST[0],
-  );
+  const [fromAsset, setFromAsset] = useState<AssetConfig | null>(null);
+  const [toAsset, setToAsset] = useState<AssetConfig | null>(null);
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [slippage, setSlippage] = useState("0.5");
   const [rate, setRate] = useState<string | null>(null);
   const [poolData, setPoolData] = useState<PoolData[]>([]);
   const [loadingRate, setLoadingRate] = useState(false);
+  const [poolsLoading, setPoolsLoading] = useState(true);
 
   useEffect(() => {
     async function fetchPools() {
       try {
+        setPoolsLoading(true);
         const response = await fetch(`${DEEPBOOK_INDEXER_URL}/get_pools`);
         const data = await response.json();
         setPoolData(data);
+
+        if (data.length > 0) {
+          const firstPool = data[0];
+          const baseAsset = ASSET_LIST.find(
+            (a) => a.symbol === firstPool.base_asset_symbol,
+          );
+          const quoteAsset = ASSET_LIST.find(
+            (a) => a.symbol === firstPool.quote_asset_symbol,
+          );
+          if (baseAsset) setFromAsset(baseAsset);
+          if (quoteAsset) setToAsset(quoteAsset);
+        }
       } catch (error) {
         console.error("Failed to fetch pools:", error);
+        setFromAsset(ASSET_LIST[0]);
+        setToAsset(ASSET_LIST[1] || ASSET_LIST[0]);
+      } finally {
+        setPoolsLoading(false);
       }
     }
     fetchPools();
@@ -101,14 +117,33 @@ export function SimpleSwap() {
   }, [fromAmount, rate]);
 
   const handleSwapDirection = () => {
-    setFromAsset(toAsset);
-    setToAsset(fromAsset);
-    setFromAmount(toAmount);
-    setToAmount(fromAmount);
+    if (fromAsset && toAsset) {
+      setFromAsset(toAsset);
+      setToAsset(fromAsset);
+      setFromAmount(toAmount);
+      setToAmount(fromAmount);
+    }
   };
 
-  const fromBalance = getBalance(fromAsset.symbol);
-  const toBalance = getBalance(toAsset.symbol);
+  const fromBalance = fromAsset
+    ? getBalance(fromAsset.symbol)
+    : { formatted: "0.00", loading: false };
+  const toBalance = toAsset
+    ? getBalance(toAsset.symbol)
+    : { formatted: "0.00", loading: false };
+
+  if (poolsLoading || !fromAsset || !toAsset) {
+    return (
+      <Card className="bg-slate-900/50 border-white/5 backdrop-blur-sm max-w-md mx-auto">
+        <CardContent className="p-6 flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin text-cyan-400 mx-auto mb-3" />
+            <p className="text-slate-400">Loading pools...</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card className="bg-slate-900/50 border-white/5 backdrop-blur-sm max-w-md mx-auto">

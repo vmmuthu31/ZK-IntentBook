@@ -72,7 +72,7 @@ function PoolCard({
 }) {
   return (
     <Card
-      className="bg-zinc-900/50 border-zinc-800 hover:border-cyan-500/50 transition-colors cursor-pointer"
+      className="bg-slate-900/50 border-slate-800 hover:border-cyan-500/50 transition-colors cursor-pointer"
       onClick={onSelect}
     >
       <CardContent className="p-4">
@@ -81,7 +81,7 @@ function PoolCard({
             <h3 className="font-bold text-lg">
               {pool.baseAsset}/{pool.quoteAsset}
             </h3>
-            <p className="text-sm text-zinc-400">Lending Pool</p>
+            <p className="text-sm text-slate-400">Lending Pool</p>
           </div>
           <Badge variant="outline" className="text-cyan-400 border-cyan-400/50">
             {pool.utilizationRate.toFixed(1)}% Utilized
@@ -90,7 +90,7 @@ function PoolCard({
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="space-y-1">
-            <p className="text-xs text-zinc-500 flex items-center gap-1">
+            <p className="text-xs text-slate-500 flex items-center gap-1">
               <TrendingUp className="h-3 w-3" /> Supply APR
             </p>
             <p className="text-lg font-bold text-green-400">
@@ -98,7 +98,7 @@ function PoolCard({
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs text-zinc-500 flex items-center gap-1">
+            <p className="text-xs text-slate-500 flex items-center gap-1">
               <TrendingDown className="h-3 w-3" /> Borrow APR
             </p>
             <p className="text-lg font-bold text-orange-400">
@@ -107,13 +107,13 @@ function PoolCard({
           </div>
         </div>
 
-        <div className="flex justify-between items-center mt-4 pt-3 border-t border-zinc-800">
+        <div className="flex justify-between items-center mt-4 pt-3 border-t border-slate-800">
           <div className="text-sm">
-            <span className="text-zinc-400">LTV: </span>
+            <span className="text-slate-400">LTV: </span>
             <span className="text-white">{pool.ltvRatio}%</span>
           </div>
           <div className="text-sm">
-            <span className="text-zinc-400">Liq. Threshold: </span>
+            <span className="text-slate-400">Liq. Threshold: </span>
             <span className="text-white">{pool.liquidationThreshold}%</span>
           </div>
         </div>
@@ -134,7 +134,7 @@ function PositionCard({
 
   return (
     <Card
-      className={`bg-zinc-900/50 border-zinc-800 ${position.healthFactor < 1.5 ? "border-orange-500/50" : ""}`}
+      className={`bg-slate-900/50 border-slate-800 ${position.healthFactor < 1.5 ? "border-orange-500/50" : ""}`}
     >
       <CardContent className="p-4">
         <div className="flex justify-between items-start mb-3">
@@ -142,7 +142,7 @@ function PositionCard({
             <h3 className="font-bold">
               {pool?.baseAsset || "Unknown"}/{pool?.quoteAsset || "USDC"}
             </h3>
-            <p className="text-xs text-zinc-500 font-mono">
+            <p className="text-xs text-slate-500 font-mono">
               {position.positionId.slice(0, 10)}...
             </p>
           </div>
@@ -151,13 +151,13 @@ function PositionCard({
 
         <div className="grid grid-cols-2 gap-4 mt-4">
           <div className="space-y-1">
-            <p className="text-xs text-zinc-500">Collateral</p>
+            <p className="text-xs text-slate-500">Collateral</p>
             <p className="font-bold">
               {formatNumber(collateralValue)} {pool?.baseAsset || "?"}
             </p>
           </div>
           <div className="space-y-1">
-            <p className="text-xs text-zinc-500">Borrowed</p>
+            <p className="text-xs text-slate-500">Borrowed</p>
             <p className="font-bold">
               {formatNumber(debtValue)} {pool?.quoteAsset || "USDC"}
             </p>
@@ -221,7 +221,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
   }, [runSimulation]);
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-slate-900/50 border-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Coins className="h-5 w-5 text-cyan-400" />
@@ -230,7 +230,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm text-zinc-400 block mb-2">
+          <label className="text-sm text-slate-400 block mb-2">
             Select Pool
           </label>
           <select
@@ -238,7 +238,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
             onChange={(e: ChangeEvent<HTMLSelectElement>) =>
               setSelectedPool(e.target.value)
             }
-            className="w-full bg-zinc-800 border border-zinc-700 rounded-lg p-2 text-white"
+            className="w-full bg-slate-800 border border-slate-700 rounded-lg p-2 text-white"
           >
             <option value="">Select a pool</option>
             {pools.map((p) => (
@@ -251,7 +251,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="text-sm text-zinc-400 block mb-2">
+            <label className="text-sm text-slate-400 block mb-2">
               Collateral ({pool?.baseAsset || "Base"})
             </label>
             <Input
@@ -261,11 +261,11 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setCollateralAmount(e.target.value)
               }
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-slate-800 border-slate-700"
             />
           </div>
           <div>
-            <label className="text-sm text-zinc-400 block mb-2">
+            <label className="text-sm text-slate-400 block mb-2">
               Borrow ({pool?.quoteAsset || "Quote"})
             </label>
             <Input
@@ -275,13 +275,13 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setBorrowAmount(e.target.value)
               }
-              className="bg-zinc-800 border-zinc-700"
+              className="bg-slate-800 border-slate-700"
             />
           </div>
         </div>
 
         {pool && collateralAmount && (
-          <div className="text-sm text-zinc-400">
+          <div className="text-sm text-slate-400">
             Max borrowable:{" "}
             <span className="text-white font-bold">
               {(parseFloat(collateralAmount) * (pool.ltvRatio / 100)).toFixed(
@@ -299,25 +299,25 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
         )}
 
         {simulation && !loading && (
-          <div className="p-4 bg-zinc-800/50 rounded-lg space-y-3">
+          <div className="p-4 bg-slate-800/50 rounded-lg space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-zinc-400">Health Factor</span>
+              <span className="text-slate-400">Health Factor</span>
               <HealthIndicator health={simulation.healthFactor} />
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-zinc-400">Liquidation Price</span>
+              <span className="text-slate-400">Liquidation Price</span>
               <span className="font-bold">
                 ${simulation.liquidationPrice.toFixed(4)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-zinc-400">Monthly Interest</span>
+              <span className="text-slate-400">Monthly Interest</span>
               <span className="font-bold text-orange-400">
                 ${simulation.monthlyInterest.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-zinc-400">Annual Interest</span>
+              <span className="text-slate-400">Annual Interest</span>
               <span className="font-bold text-orange-400">
                 ${simulation.annualInterest.toFixed(2)}
               </span>
@@ -349,7 +349,7 @@ function InterestRateChart({ pool }: { pool: LendingPoolInfo }) {
   const maxRate = Math.max(...rates);
 
   return (
-    <Card className="bg-zinc-900/50 border-zinc-800">
+    <Card className="bg-slate-900/50 border-slate-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Percent className="h-5 w-5 text-cyan-400" />
@@ -395,7 +395,7 @@ function InterestRateChart({ pool }: { pool: LendingPoolInfo }) {
           </div>
         </div>
 
-        <div className="flex justify-between mt-2 text-xs text-zinc-500">
+        <div className="flex justify-between mt-2 text-xs text-slate-500">
           <span>0%</span>
           <span>50%</span>
           <span>100%</span>
@@ -404,11 +404,11 @@ function InterestRateChart({ pool }: { pool: LendingPoolInfo }) {
         <div className="flex justify-center gap-4 mt-4 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-blue-500 rounded" />
-            <span className="text-zinc-400">Normal Rate</span>
+            <span className="text-slate-400">Normal Rate</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 bg-orange-500 rounded" />
-            <span className="text-zinc-400">Jump Rate</span>
+            <span className="text-slate-400">Jump Rate</span>
           </div>
         </div>
       </CardContent>
@@ -463,7 +463,7 @@ export function LendingDashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold">Order Book Lending</h2>
-          <p className="text-zinc-400">
+          <p className="text-slate-400">
             Borrow against your assets using DeepBook liquidity
           </p>
         </div>
@@ -476,7 +476,7 @@ export function LendingDashboard() {
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-zinc-900/50">
+        <TabsList className="bg-slate-900/50">
           <TabsTrigger value="pools">Lending Pools</TabsTrigger>
           <TabsTrigger value="positions">
             My Positions ({positions.length})
@@ -500,17 +500,17 @@ export function LendingDashboard() {
 
         <TabsContent value="positions" className="space-y-4 mt-4">
           {!connected ? (
-            <Card className="bg-zinc-900/50 border-zinc-800">
+            <Card className="bg-slate-900/50 border-slate-800">
               <CardContent className="py-12 text-center">
-                <p className="text-zinc-400">
+                <p className="text-slate-400">
                   Connect wallet to view positions
                 </p>
               </CardContent>
             </Card>
           ) : positions.length === 0 ? (
-            <Card className="bg-zinc-900/50 border-zinc-800">
+            <Card className="bg-slate-900/50 border-slate-800">
               <CardContent className="py-12 text-center">
-                <p className="text-zinc-400">No active lending positions</p>
+                <p className="text-slate-400">No active lending positions</p>
                 <Button className="mt-4" onClick={() => setActiveTab("pools")}>
                   Browse Pools
                 </Button>

@@ -80,7 +80,7 @@ function MetricRow({
 
 export function IntentComparator() {
   const [tradeSize, setTradeSize] = useState(1000);
-  const [selectedPool, setSelectedPool] = useState("SUI_USDC");
+  const [selectedPool, setSelectedPool] = useState("DEEP_SUI");
   const [isBuy, setIsBuy] = useState(true);
   const [publicMetrics, setPublicMetrics] = useState<TradeAnalysis | null>(
     null,
