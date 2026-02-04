@@ -30,8 +30,11 @@ export async function getOrderBookAction(input: unknown) {
 
 export async function getPoolInfoAction(poolId: string) {
   try {
-    const poolInfo = await deepBookService.getPoolInfo(poolId);
-    return { success: true, data: poolInfo };
+    const [tradeParams, bookParams] = await Promise.all([
+      deepBookService.getPoolTradeParams(poolId),
+      deepBookService.getPoolBookParams(poolId),
+    ]);
+    return { success: true, data: { tradeParams, bookParams } };
   } catch (error) {
     console.error("getPoolInfoAction error:", error);
     return {
