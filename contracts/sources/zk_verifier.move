@@ -1,7 +1,5 @@
+#[allow(unused_const, duplicate_alias)]
 module zk_intentbook::zk_verifier {
-    use sui::object::{Self, UID};
-    use sui::tx_context::{Self, TxContext};
-    use sui::transfer;
     use sui::event;
     use std::vector;
 

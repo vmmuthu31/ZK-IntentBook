@@ -1,12 +1,9 @@
+#[allow(unused_variable)]
 module zk_intentbook::intent_registry {
-    use sui::object::{Self, UID, ID};
-    use sui::tx_context::{Self, TxContext};
-    use sui::transfer;
     use sui::table::{Self, Table};
     use sui::event;
     use sui::clock::{Self, Clock};
     use sui::vec_set::{Self, VecSet};
-    use std::vector;
 
     const EIntentAlreadyExists: u64 = 1;
     const EIntentNotFound: u64 = 2;
@@ -219,7 +216,7 @@ module zk_intentbook::intent_registry {
         if (!table::contains(&registry.user_intents, user)) {
             return 0
         };
-        vec_set::size(table::borrow(&registry.user_intents, user))
+        vec_set::length(table::borrow(&registry.user_intents, user))
     }
 
     public fun total_intents(registry: &IntentRegistry): u64 {
