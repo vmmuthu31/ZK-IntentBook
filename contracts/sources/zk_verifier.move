@@ -207,9 +207,9 @@ module zk_intentbook::zk_verifier {
 
     fun bytes_to_u64(bytes: &vector<u8>, offset: u64): u64 {
         let mut result: u64 = 0;
-        let mut i: u64 = 0;
-        while (i < 8 && (offset + i) < vector::length(bytes)) {
-            let byte = (*vector::borrow(bytes, offset + i) as u64);
+        let mut i: u8 = 0;
+        while ((i as u64) < 8 && (offset + (i as u64)) < vector::length(bytes)) {
+            let byte = (*vector::borrow(bytes, offset + (i as u64)) as u64);
             result = result | (byte << ((7 - i) * 8));
             i = i + 1;
         };
