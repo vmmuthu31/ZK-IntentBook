@@ -9,11 +9,12 @@ export const DEEPBOOK_PACKAGE_IDS = {
   mainnet: "0x2c8d603bc51326b8c13cef9dd07031a408a48dddb541963c8e8b5eb548dee4ca",
 } as const;
 
-export const DEEPBOOK_INDEXER_URL =
+export const DEEPBOOK_INDEXER_URL = (
   process.env.NEXT_PUBLIC_DEEPBOOK_INDEXER_URL ||
   (NETWORK === "testnet"
     ? "https://deepbook-indexer.testnet.mystenlabs.com"
-    : "https://deepbook-indexer.mainnet.mystenlabs.com");
+    : "https://deepbook-indexer.mainnet.mystenlabs.com")
+).replace(/\/+$/, "");
 
 export const DEEPBOOK_PACKAGE_ID = DEEPBOOK_PACKAGE_IDS[NETWORK];
 

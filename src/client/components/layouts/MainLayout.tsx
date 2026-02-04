@@ -51,7 +51,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
               <ZkLoginButton />
 
-              <ConnectButton className="bg-cyan-600! hover:bg-cyan-500! border-0! rounded-xl! px-4! py-2! text-sm! font-medium! transition-all! duration-200!" />
+              <ConnectButton className="bg-cyan-600! hover:bg-cyan-500! border-0! rounded-xl! text-sm! font-medium! transition-all! duration-200!" />
 
               <Sheet>
                 <SheetTrigger asChild className="md:hidden">

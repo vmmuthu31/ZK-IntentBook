@@ -73,12 +73,18 @@ export function SimpleSwap() {
         return;
       }
 
-      const poolName = `${fromAsset.symbol}_${toAsset.symbol}`;
-      const reversePoolName = `${toAsset.symbol}_${fromAsset.symbol}`;
+      const poolName1 = `${fromAsset.symbol}_${toAsset.symbol}`;
+      const poolName2 = `${toAsset.symbol}_${fromAsset.symbol}`;
+      const poolName3 = `${fromAsset.symbol}/${toAsset.symbol}`;
+      const poolName4 = `${toAsset.symbol}/${fromAsset.symbol}`;
 
-      const pool =
-        poolData.find((p) => p.pool_name === poolName) ||
-        poolData.find((p) => p.pool_name === reversePoolName);
+      const pool = poolData.find(
+        (p) =>
+          p.pool_name === poolName1 ||
+          p.pool_name === poolName2 ||
+          p.pool_name === poolName3 ||
+          p.pool_name === poolName4,
+      );
 
       if (!pool) {
         setRate(null);
@@ -93,7 +99,9 @@ export function SimpleSwap() {
         const data = await response.json();
         const price = parseFloat(data.mid_price || data.price || "0");
 
-        if (pool.pool_name === reversePoolName && price > 0) {
+        const isReverse =
+          pool.pool_name === poolName2 || pool.pool_name === poolName4;
+        if (isReverse && price > 0) {
           setRate((1 / price).toFixed(6));
         } else {
           setRate(price.toFixed(6));
