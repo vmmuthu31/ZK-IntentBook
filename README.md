@@ -4,10 +4,6 @@
 
 A next-generation trading frontend for Sui's DeepBook that prioritizes user privacy through encrypted intents, competitive solver execution, and zero-knowledge proof verification. Trade without MEV, front-running, or exposing your strategy.
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-![Sui](https://img.shields.io/badge/Sui-Testnet-brightgreen)
-![Next.js](https://img.shields.io/badge/Next.js-16-black)
-
 ---
 
 ## 🌟 Features
@@ -434,12 +430,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Discord**: [Join our community](#)
 - **Twitter**: [@zkintentbook](#)
 - **Documentation**: [Full docs](#)
-
----
-
-## ⚠️ Disclaimer
-
-This software is experimental and provided "as is" without warranty. Trading cryptocurrencies involves risk. Always do your own research and never invest more than you can afford to lose.
 
 ---
 
