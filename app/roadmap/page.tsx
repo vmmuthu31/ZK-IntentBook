@@ -46,27 +46,27 @@ const roadmapPhases: RoadmapPhase[] = [
       {
         title: "DeepBook Integration",
         description:
-          "Full integration with DeepBook V3 SDK for order book trading",
+          "DeepBook V3 SDK integration with real-time order book data",
         status: "completed",
         icon: <BookOpen className="h-5 w-5" />,
       },
       {
         title: "ZK Proof System",
         description:
-          "Plonky3-based prover for privacy-preserving intent verification",
+          "Plonky3 STARK prover for privacy-preserving verification",
         status: "completed",
         icon: <Shield className="h-5 w-5" />,
       },
       {
         title: "Move Smart Contracts",
         description:
-          "On-chain intent registry, settlement, and ZK verification",
+          "Intent registry, settlement, and ZK verifier on Sui",
         status: "completed",
         icon: <Lock className="h-5 w-5" />,
       },
       {
-        title: "Solver Infrastructure",
-        description: "WebSocket-based solver network for intent matching",
+        title: "Solver Network",
+        description: "WebSocket-based solver infrastructure with encryption",
         status: "completed",
         icon: <Zap className="h-5 w-5" />,
       },
@@ -79,26 +79,26 @@ const roadmapPhases: RoadmapPhase[] = [
     items: [
       {
         title: "Encrypted Intents",
-        description: "End-to-end encryption for all trading intents",
+        description: "Client-side encryption before any network transmission",
         status: "completed",
         icon: <Lock className="h-5 w-5" />,
       },
       {
-        title: "3-Mode Trading UI",
-        description: "Simple Swap, Advanced Trading, and Private Intent modes",
+        title: "Trading Modes",
+        description: "Simple swap, advanced orders, and private intent UI",
         status: "completed",
         icon: <Target className="h-5 w-5" />,
       },
       {
-        title: "zkLogin Integration",
+        title: "zkLogin",
         description:
-          "OAuth-based authentication with zero-knowledge identity privacy",
+          "Social login with zero-knowledge identity privacy",
         status: "completed",
         icon: <Shield className="h-5 w-5" />,
       },
       {
         title: "Referral System",
-        description: "On-chain referral tracking with fee sharing",
+        description: "On-chain referral tracking via DeepBook",
         status: "completed",
         icon: <Users className="h-5 w-5" />,
       },
@@ -106,51 +106,76 @@ const roadmapPhases: RoadmapPhase[] = [
   },
   {
     title: "Phase 3: Order Book Lending",
-    status: "upcoming",
-    progress: 15,
+    status: "completed",
+    progress: 100,
     items: [
       {
-        title: "Lending Pool Architecture",
-        description: "Design lending pools integrated with DeepBook liquidity",
-        status: "in-progress",
+        title: "Lending Pool Contract",
+        description: "Move contract with interest rate model and liquidation",
+        status: "completed",
         icon: <Coins className="h-5 w-5" />,
       },
       {
         title: "Collateral Management",
-        description: "Multi-asset collateral with dynamic LTV ratios",
-        status: "upcoming",
+        description: "Multi-asset collateral with 75% LTV and health tracking",
+        status: "completed",
         icon: <Wallet className="h-5 w-5" />,
       },
       {
         title: "Interest Rate Model",
         description:
-          "Utilization-based rates with order book depth consideration",
-        status: "upcoming",
+          "Utilization-based rates with kink at 80% optimal",
+        status: "completed",
         icon: <TrendingUp className="h-5 w-5" />,
       },
       {
         title: "Liquidation Engine",
-        description: "DeepBook-native liquidation via limit orders",
-        status: "upcoming",
+        description: "On-chain liquidation with 5% bonus for liquidators",
+        status: "completed",
         icon: <Zap className="h-5 w-5" />,
       },
     ],
   },
   {
     title: "Phase 4: Advanced Features",
-    status: "upcoming",
-    progress: 0,
+    status: "completed",
+    progress: 100,
     items: [
       {
-        title: "Cross-Pool Strategies",
-        description: "Arbitrage and yield optimization across pools",
-        status: "upcoming",
+        title: "Market Making",
+        description: "Automated market making with configurable spreads",
+        status: "completed",
         icon: <TrendingUp className="h-5 w-5" />,
       },
       {
         title: "Automated Market Making",
         description:
-          "Decentralized market making with privacy-preserving quotes",
+          "Privacy-preserving quotes with PnL tracking",
+        status: "completed",
+        icon: <Rocket className="h-5 w-5" />,
+      },
+      {
+        title: "Cross-Pool Arbitrage",
+        description: "Detect and execute arbitrage opportunities",
+        status: "completed",
+        icon: <Users className="h-5 w-5" />,
+      },
+      {
+        title: "Strategy Dashboard",
+        description: "UI for managing market making and arbitrage",
+        status: "completed",
+        icon: <Wallet className="h-5 w-5" />,
+      },
+    ],
+  },
+  {
+    title: "Phase 5: Production & Scale",
+    status: "upcoming",
+    progress: 0,
+    items: [
+      {
+        title: "Mainnet Deployment",
+        description: "Deploy contracts and launch on Sui mainnet",
         status: "upcoming",
         icon: <Rocket className="h-5 w-5" />,
       },
@@ -165,6 +190,12 @@ const roadmapPhases: RoadmapPhase[] = [
         description: "Native mobile experience with zkLogin",
         status: "upcoming",
         icon: <Wallet className="h-5 w-5" />,
+      },
+      {
+        title: "Multi-Chain",
+        description: "Expand to other Move-based chains",
+        status: "upcoming",
+        icon: <TrendingUp className="h-5 w-5" />,
       },
     ],
   },
@@ -202,16 +233,15 @@ export default function RoadmapPage() {
           </p>
         </div>
 
-        <Card className="border-indigo-500/20 bg-gradient-to-br from-indigo-950/50 to-purple-950/50">
+        <Card className="border-green-500/20 bg-gradient-to-br from-green-950/50 to-emerald-950/50">
           <CardHeader>
             <div className="flex items-center gap-2">
-              <Coins className="h-6 w-6 text-amber-400" />
-              <CardTitle>Coming Soon: Order Book Lending</CardTitle>
+              <CheckCircle className="h-6 w-6 text-green-400" />
+              <CardTitle>Order Book Lending — Live on Testnet</CardTitle>
             </div>
             <CardDescription className="text-base">
-              Borrow and lend assets directly through DeepBook&apos;s order
-              book. Earn yield on your idle assets while maintaining full
-              control.
+              Borrow and lend assets directly through DeepBook. Earn yield on
+              your idle assets while maintaining full control.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -219,19 +249,19 @@ export default function RoadmapPage() {
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-200">For Lenders</h4>
                 <ul className="space-y-1 text-slate-400">
-                  <li>• Earn interest on deposited assets</li>
-                  <li>• Utilization-based dynamic rates</li>
-                  <li>• Withdraw anytime with no lock-up</li>
-                  <li>• Privacy-preserving positions</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Earn interest on deposited assets</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Utilization-based dynamic rates</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Withdraw anytime</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Privacy-preserving positions</li>
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-200">For Borrowers</h4>
                 <ul className="space-y-1 text-slate-400">
-                  <li>• Borrow against collateral</li>
-                  <li>• Competitive interest rates</li>
-                  <li>• Order book native liquidations</li>
-                  <li>• Multi-asset collateral support</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Borrow against collateral</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> 75% LTV ratio</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> On-chain liquidation engine</li>
+                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Health factor tracking</li>
                 </ul>
               </div>
             </div>
