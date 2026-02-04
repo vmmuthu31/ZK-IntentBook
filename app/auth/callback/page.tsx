@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, CheckCircle, XCircle, Shield } from "lucide-react";
@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 
 type CallbackState = "loading" | "success" | "error";
 
-export default function AuthCallbackPage() {
+function AuthCallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { handleCallback, isAuthenticated } = useZkLogin();
@@ -122,5 +122,31 @@ export default function AuthCallbackPage() {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+function LoadingFallback() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md">
+        <CardHeader className="text-center">
+          <div className="mx-auto mb-4">
+            <Shield className="h-12 w-12 text-primary" />
+          </div>
+          <CardTitle className="text-xl">zkLogin Authentication</CardTitle>
+        </CardHeader>
+        <CardContent className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
+
+export default function AuthCallbackPage() {
+  return (
+    <Suspense fallback={<LoadingFallback />}>
+      <AuthCallbackContent />
+    </Suspense>
   );
 }
