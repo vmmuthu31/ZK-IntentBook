@@ -1,30 +1,41 @@
 # ZK-IntentBook 🛡️⚡
 
-> **Privacy-Preserving, Intent-Based Trading on DeepBook**
+> **Privacy-Preserving, Intent-Based Trading on Sui DeepBook**
 
-A next-generation trading frontend for Sui's DeepBook that prioritizes user privacy through encrypted intents, competitive solver execution, and zero-knowledge proof verification. Trade without MEV, front-running, or exposing your strategy.
+A next-generation trading frontend for Sui's DeepBook that delivers user privacy through encrypted intents, competitive solver execution, and zero-knowledge proof verification. Trade without MEV, front-running, or exposing your strategy.
+
+**Live on Sui Testnet** • Real DeepBook Data
 
 ---
 
-## � For Hackathon Judges
-
-**👉 See [JUDGES.md](./JUDGES.md) for:**
-
-- One-page project summary
-- Click-by-click demo steps
-- What's real vs mocked
-- 60-second demo script
-
-**Quick Demo:**
+## Quick Start
 
 ```bash
 npm install && npm run dev
-# Open http://localhost:3000/demo
+# Open http://localhost:3000
 ```
+
+**For Judges:** See [JUDGES.md](./JUDGES.md) for click-by-click demo and architecture overview.
 
 ---
 
-## 🌟 Features
+## Network Configuration
+
+Currently configured for **Sui Testnet** with real DeepBook V3 pools:
+
+| Pool        | Pool ID                                                              |
+| ----------- | -------------------------------------------------------------------- |
+| DEEP/SUI    | `0x48c95963e9eac37a316b7ae04a0deb761bcdcc2b67912374d6036e7f0e9bae9f` |
+| SUI/DBUSDC  | `0x1c19362ca52b8ffd7a33cee805a67d40f31e6ba303753fd3a4cfdfacea7163a5` |
+| DEEP/DBUSDC | `0xe86b991f8632217505fd859445f9803967ac84a9d4a1219065bf191fcb74b622` |
+| WAL/SUI     | `0x8c1c1b186c4fddab1ebd53e0895a36c1d1b3b9a77cd34e607bef49a38af0150a` |
+| DBTC/DBUSDC | `0x0dce0aa771074eb83d1f4a29d48be8248d4d2190976a5241f66b43ec18fa34de` |
+
+Get testnet SUI: https://faucet.sui.io/
+
+---
+
+## Features
 
 ### 🔐 Privacy-First Trading
 
@@ -457,34 +468,25 @@ Contributions are welcome! Please follow these steps:
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- **Sui Foundation** - For the incredible blockchain platform
-- **DeepBook Team** - For the high-performance CLOB
-- **Polygon** - For Plonky3 ZK proving system
-- **shadcn** - For the beautiful UI components
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 📞 Contact & Support
+## Acknowledgments
 
-- **GitHub Issues**: [Report bugs or request features](https://github.com/vmmuthu31/zk-intentbook/issues)
-- **Discord**: [Join our community](#)
-- **Twitter**: [@zkintentbook](#)
-- **Documentation**: [Full docs](#)
+- **Sui Foundation** - Blockchain platform
+- **DeepBook Team** - High-performance CLOB
+- **Polygon** - Plonky3 ZK proving system
+- **shadcn** - UI components
 
 ---
 
-<div align="center">
+## Support
 
-**Built with ❤️ for the Sui ecosystem**
+- **Issues**: [github.com/vmmuthu31/zk-intentbook/issues](https://github.com/vmmuthu31/zk-intentbook/issues)
 
-[Website](#) • [Docs](#) • [Twitter](#) • [Discord](#)
+---
 
-</div>
+Built for the Sui ecosystem 🚀
