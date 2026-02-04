@@ -2,7 +2,9 @@
 
 import { z } from "zod";
 import { POOLS } from "@/shared/constants";
+import { getSuiClient } from "@/server/config/sui";
 
+const suiClient = getSuiClient();
 const LENDING_PACKAGE_ID = process.env.LENDING_PACKAGE_ID || "0x0";
 const CLOCK_ID = "0x6";
 const PRECISION = BigInt(1_000_000_000);
@@ -93,11 +95,70 @@ function calculateSupplyAPR(borrowAPR: number, utilization: number): number {
   return borrowAPR * (utilization / 100) * (1 - reserveFactor);
 }
 
+async function tryFetchOnChainPool(poolId: string): Promise<{
+  totalBaseDeposited: bigint;
+  totalQuoteDeposited: bigint;
+  totalQuoteBorrowed: bigint;
+  utilizationRate: number;
+} | null> {
+  if (LENDING_PACKAGE_ID === "0x0") return null;
+
+  try {
+    const lendingPoolType = `${LENDING_PACKAGE_ID}::lending_pool::LendingPool`;
+
+    const objects = await suiClient.getOwnedObjects({
+      owner: poolId,
+      filter: { StructType: lendingPoolType },
+      options: { showContent: true },
+    });
+
+    if (objects.data.length === 0) return null;
+
+    const poolObj = objects.data[0];
+    if (
+      !poolObj.data?.content ||
+      poolObj.data.content.dataType !== "moveObject"
+    ) {
+      return null;
+    }
+
+    const fields = poolObj.data.content.fields as {
+      total_base_deposited?: string;
+      total_quote_deposited?: string;
+      total_quote_borrowed?: string;
+    };
+
+    const totalBaseDeposited = BigInt(fields.total_base_deposited || "0");
+    const totalQuoteDeposited = BigInt(fields.total_quote_deposited || "0");
+    const totalQuoteBorrowed = BigInt(fields.total_quote_borrowed || "0");
+
+    const utilizationRate =
+      totalQuoteDeposited > BigInt(0)
+        ? Number((totalQuoteBorrowed * BigInt(10000)) / totalQuoteDeposited) /
+          100
+        : 0;
+
+    return {
+      totalBaseDeposited,
+      totalQuoteDeposited,
+      totalQuoteBorrowed,
+      utilizationRate,
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function getLendingPools(): Promise<LendingPoolInfo[]> {
   const pools: LendingPoolInfo[] = [];
 
-  for (const [poolName, poolConfig] of Object.entries(POOLS)) {
-    const utilizationRate = Math.random() * 80;
+  for (const [, poolConfig] of Object.entries(POOLS)) {
+    const onChainData = await tryFetchOnChainPool(poolConfig.id);
+
+    const utilizationRate =
+      onChainData?.utilizationRate ??
+      25 + (Number(poolConfig.id.slice(-4)) % 55);
+
     const model: InterestRateModel = {
       baseRate: 2,
       multiplier: 10,
@@ -112,9 +173,13 @@ export async function getLendingPools(): Promise<LendingPoolInfo[]> {
       poolId: poolConfig.id,
       baseAsset: poolConfig.baseAsset.symbol,
       quoteAsset: poolConfig.quoteAsset.symbol,
-      totalBaseDeposited: BigInt(Math.floor(Math.random() * 1000000) * 1e9),
-      totalQuoteBorrowed: BigInt(Math.floor(Math.random() * 500000) * 1e9),
-      totalQuoteDeposited: BigInt(Math.floor(Math.random() * 800000) * 1e9),
+      totalBaseDeposited:
+        onChainData?.totalBaseDeposited ?? BigInt(500000 * 1e9),
+      totalQuoteBorrowed:
+        onChainData?.totalQuoteBorrowed ??
+        BigInt(Math.floor(utilizationRate * 5000) * 1e9),
+      totalQuoteDeposited:
+        onChainData?.totalQuoteDeposited ?? BigInt(500000 * 1e9),
       utilizationRate,
       borrowAPR,
       supplyAPR,
@@ -140,34 +205,51 @@ export async function getUserPositions(
 
   const positions: LendingPosition[] = [];
 
-  const pools = await getLendingPools();
+  if (LENDING_PACKAGE_ID !== "0x0") {
+    try {
+      const positionType = `${LENDING_PACKAGE_ID}::lending_pool::LendingPosition`;
 
-  for (const pool of pools) {
-    if (Math.random() > 0.5) {
-      const baseDeposited = BigInt(Math.floor(Math.random() * 10000) * 1e9);
-      const quoteBorrowed = BigInt(
-        Math.floor(Math.random() * Number(baseDeposited / BigInt(1e9)) * 0.6) *
-          1e9,
-      );
-
-      const collateralValue = Number(baseDeposited) / 1e9;
-      const debtValue = Number(quoteBorrowed) / 1e9;
-      const healthFactor =
-        debtValue > 0
-          ? (collateralValue * pool.liquidationThreshold) / 100 / debtValue
-          : Infinity;
-
-      positions.push({
-        positionId: `0x${Math.random().toString(16).slice(2, 18)}`,
+      const objects = await suiClient.getOwnedObjects({
         owner: userAddress,
-        poolId: pool.poolId,
-        baseDeposited,
-        quoteBorrowed,
-        lastInterestIndex: PRECISION,
-        healthFactor: Math.min(healthFactor, 10),
-        liquidationPrice:
-          debtValue > 0 ? debtValue / (collateralValue * 0.825) : 0,
+        filter: { StructType: positionType },
+        options: { showContent: true },
       });
+
+      for (const obj of objects.data) {
+        if (!obj.data?.content || obj.data.content.dataType !== "moveObject")
+          continue;
+
+        const fields = obj.data.content.fields as {
+          pool_id?: string;
+          base_deposited?: string;
+          quote_borrowed?: string;
+          last_interest_index?: string;
+        };
+
+        const baseDeposited = BigInt(fields.base_deposited || "0");
+        const quoteBorrowed = BigInt(fields.quote_borrowed || "0");
+
+        const collateralValue = Number(baseDeposited) / 1e9;
+        const debtValue = Number(quoteBorrowed) / 1e9;
+        const healthFactor =
+          debtValue > 0 ? (collateralValue * 82.5) / 100 / debtValue : Infinity;
+
+        positions.push({
+          positionId: obj.data.objectId,
+          owner: userAddress,
+          poolId: fields.pool_id || "",
+          baseDeposited,
+          quoteBorrowed,
+          lastInterestIndex: BigInt(fields.last_interest_index || "0"),
+          healthFactor: Math.min(healthFactor, 10),
+          liquidationPrice:
+            debtValue > 0 ? debtValue / (collateralValue * 0.825) : 0,
+        });
+      }
+
+      if (positions.length > 0) return positions;
+    } catch {
+      console.warn("Failed to fetch user lending positions");
     }
   }
 
