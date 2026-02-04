@@ -14,6 +14,13 @@ A next-generation trading frontend for Sui's DeepBook that prioritizes user priv
 - **On-Chain Privacy**: Only commitment hashes are posted on-chain, keeping your strategy private
 - **MEV Protection**: No front-running or sandwich attacks - your intent is invisible to the mempool
 
+### 🆔 zkLogin Integration
+
+- **Social Login**: Sign in with Google, Facebook, Twitch, or Apple
+- **Zero-Knowledge Identity**: OAuth credentials never linked to Sui address
+- **Self-Custody**: No third party controls your keys
+- **Two-Factor Security**: Requires both OAuth + salt for transactions
+
 ### ⚡ Intent-Based Architecture
 
 - **High-Level Orders**: Specify _what_ you want, not _how_ to execute it
@@ -242,6 +249,15 @@ NEXT_PUBLIC_DEEPBOOK_PACKAGE_ID=
 
 # Intent Registry Contract (after deployment)
 NEXT_PUBLIC_INTENT_REGISTRY_ID=
+
+# zkLogin OAuth Configuration
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-google-client-id
+NEXT_PUBLIC_FACEBOOK_CLIENT_ID=your-facebook-client-id
+NEXT_PUBLIC_TWITCH_CLIENT_ID=your-twitch-client-id
+NEXT_PUBLIC_APPLE_CLIENT_ID=your-apple-client-id
+
+# zkLogin Salt Secret (server-side only)
+ZKLOGIN_SALT_SECRET=your-unique-salt-secret
 ```
 
 ### Supported Networks
@@ -261,12 +277,13 @@ NEXT_PUBLIC_INTENT_REGISTRY_ID=
 | **Frontend**        | Next.js 16, React 19, TypeScript          |
 | **Styling**         | Tailwind CSS 4, shadcn/ui                 |
 | **Blockchain**      | Sui, @mysten/sui SDK, @mysten/deepbook-v3 |
-| **Wallet**          | @suiet/wallet-kit                         |
+| **Wallet**          | @suiet/wallet-kit, zkLogin                |
 | **State**           | Zustand                                   |
 | **Validation**      | Zod                                       |
 | **Encryption**      | @noble/curves, @noble/hashes              |
 | **ZK Proofs**       | Plonky3 (Rust)                            |
 | **Smart Contracts** | Sui Move                                  |
+| **Auth**            | @mysten/sui/zklogin, jose                 |
 
 ### Build Commands
 
