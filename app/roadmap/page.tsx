@@ -52,15 +52,13 @@ const roadmapPhases: RoadmapPhase[] = [
       },
       {
         title: "ZK Proof System",
-        description:
-          "Plonky3 STARK prover for privacy-preserving verification",
+        description: "Plonky3 STARK prover for privacy-preserving verification",
         status: "completed",
         icon: <Shield className="h-5 w-5" />,
       },
       {
         title: "Move Smart Contracts",
-        description:
-          "Intent registry, settlement, and ZK verifier on Sui",
+        description: "Intent registry, settlement, and ZK verifier on Sui",
         status: "completed",
         icon: <Lock className="h-5 w-5" />,
       },
@@ -91,8 +89,7 @@ const roadmapPhases: RoadmapPhase[] = [
       },
       {
         title: "zkLogin",
-        description:
-          "Social login with zero-knowledge identity privacy",
+        description: "Social login with zero-knowledge identity privacy",
         status: "completed",
         icon: <Shield className="h-5 w-5" />,
       },
@@ -123,8 +120,7 @@ const roadmapPhases: RoadmapPhase[] = [
       },
       {
         title: "Interest Rate Model",
-        description:
-          "Utilization-based rates with kink at 80% optimal",
+        description: "Utilization-based rates with kink at 80% optimal",
         status: "completed",
         icon: <TrendingUp className="h-5 w-5" />,
       },
@@ -149,8 +145,7 @@ const roadmapPhases: RoadmapPhase[] = [
       },
       {
         title: "Automated Market Making",
-        description:
-          "Privacy-preserving quotes with PnL tracking",
+        description: "Privacy-preserving quotes with PnL tracking",
         status: "completed",
         icon: <Rocket className="h-5 w-5" />,
       },
@@ -249,19 +244,43 @@ export default function RoadmapPage() {
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-200">For Lenders</h4>
                 <ul className="space-y-1 text-slate-400">
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Earn interest on deposited assets</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Utilization-based dynamic rates</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Withdraw anytime</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Privacy-preserving positions</li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> Earn
+                    interest on deposited assets
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" />{" "}
+                    Utilization-based dynamic rates
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> Withdraw
+                    anytime
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" />{" "}
+                    Privacy-preserving positions
+                  </li>
                 </ul>
               </div>
               <div className="space-y-2">
                 <h4 className="font-semibold text-slate-200">For Borrowers</h4>
                 <ul className="space-y-1 text-slate-400">
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Borrow against collateral</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> 75% LTV ratio</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> On-chain liquidation engine</li>
-                  <li className="flex items-center gap-2"><CheckCircle className="h-3 w-3 text-green-400" /> Health factor tracking</li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> Borrow
+                    against collateral
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> 75% LTV
+                    ratio
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> On-chain
+                    liquidation engine
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="h-3 w-3 text-green-400" /> Health
+                    factor tracking
+                  </li>
                 </ul>
               </div>
             </div>
