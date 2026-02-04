@@ -36,9 +36,13 @@ import { CreateIntentSchema, type CreateIntentInput } from "@/shared/schemas";
 import { ASSET_LIST, POOL_LIST } from "@/shared/constants";
 import { useIntentWallet } from "@/client/hooks";
 import { useIntentStore } from "@/client/state/intentStore";
+import { submitIntent } from "@/server/actions/intent.actions";
+import { toast } from "sonner";
 
 export function PrivateIntent() {
-  const { connected, address } = useIntentWallet();
+  const { connected, address, signIntent, signAndExecuteTransaction } =
+    useIntentWallet();
+  const { addIntent } = useIntentStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [mevProtection, setMevProtection] = useState(true);
@@ -67,18 +71,54 @@ export function PrivateIntent() {
   const direction = watch("direction");
 
   const onSubmit = async (data: CreateIntentInput) => {
-    if (!connected || !address) return;
+    if (!connected || !address) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
 
     setIsSubmitting(true);
     try {
-      console.log("Submitting intent:", data);
-      // TODO: Implement actual intent submission
-      // 1. Create intent object
-      // 2. Encrypt for solver
-      // 3. Post commitment on-chain
-      // 4. Send encrypted intent to solver
+      const result = await submitIntent({
+        intent: {
+          ...data,
+          deadlineSeconds: deadline,
+          mevProtection,
+        },
+        userAddress: address,
+      });
+
+      if (!result.success || !result.data) {
+        throw new Error(result.error || "Failed to create intent");
+      }
+
+      const { intent, encrypted, transactionBytes } = result.data;
+
+      const signature = await signIntent(encrypted.commitmentHash);
+
+      const { Transaction } = await import("@mysten/sui/transactions");
+      const tx = Transaction.from(new Uint8Array(transactionBytes));
+
+      const txResult = await signAndExecuteTransaction(tx);
+
+      addIntent(intent, encrypted);
+
+      toast.success(
+        <div className="flex flex-col gap-1">
+          <span className="font-medium">Intent Submitted!</span>
+          <span className="text-xs text-slate-400">
+            Commitment: {encrypted.commitmentHash.slice(0, 10)}...
+          </span>
+        </div>,
+      );
+
+      setValue("maxSize", "");
+      setValue("minPrice", "");
+      setValue("maxPrice", "");
     } catch (error) {
       console.error("Failed to submit intent:", error);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to submit intent",
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -1,6 +1,4 @@
 export { useIntentWallet } from "./useWallet";
-export {
-  useOrderBook,
-  calculateSpread,
-  calculateMidPrice,
-} from "./useOrderBook";
+export { useOrderBook } from "./useOrderBook";
+export { useSwap } from "./useSwap";
+export { useReferrals } from "./useReferrals";
