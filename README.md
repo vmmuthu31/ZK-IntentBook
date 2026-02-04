@@ -6,6 +6,24 @@ A next-generation trading frontend for Sui's DeepBook that prioritizes user priv
 
 ---
 
+## � For Hackathon Judges
+
+**👉 See [JUDGES.md](./JUDGES.md) for:**
+
+- One-page project summary
+- Click-by-click demo steps
+- What's real vs mocked
+- 60-second demo script
+
+**Quick Demo:**
+
+```bash
+npm install && npm run dev
+# Open http://localhost:3000/demo
+```
+
+---
+
 ## 🌟 Features
 
 ### 🔐 Privacy-First Trading
@@ -13,6 +31,12 @@ A next-generation trading frontend for Sui's DeepBook that prioritizes user priv
 - **Encrypted Intents**: Your trading parameters are encrypted client-side before leaving your browser
 - **On-Chain Privacy**: Only commitment hashes are posted on-chain, keeping your strategy private
 - **MEV Protection**: No front-running or sandwich attacks - your intent is invisible to the mempool
+
+### 📊 Visual Comparisons (NEW)
+
+- **Public vs Private Comparator**: See exactly what you save with ZK-IntentBook
+- **Live MEV/Slippage Analysis**: Compare trade outcomes in real-time
+- **Solver Race Visualization**: Watch solvers compete to fill your intent
 
 ### 🆔 zkLogin Integration
 
@@ -38,6 +62,13 @@ A next-generation trading frontend for Sui's DeepBook that prioritizes user priv
 - **Native CLOB**: Direct integration with Sui's high-performance order book
 - **Referral Fees**: Earn fees on all trades executed through the platform
 - **Multiple Pools**: Support for SUI/USDC, DEEP/USDC, WAL/USDC, and more
+
+### 🎯 Why Sui?
+
+- **PTBs**: Atomic multi-step operations (verify + settle in one tx)
+- **Parallel Execution**: ZK verification and trade settlement run in parallel
+- **Move Contracts**: Formal verification guarantees
+- **DeepBook Native**: First-class CLOB integration
 
 ---
 

@@ -40,8 +40,7 @@ export function MainLayout({ children }: MainLayoutProps) {
               <NavLink href="/" active>
                 Trade
               </NavLink>
-              <NavLink href="/portfolio">Portfolio</NavLink>
-              <NavLink href="/intents">My Intents</NavLink>
+              <NavLink href="/demo">Demo</NavLink>
               <NavLink href="/roadmap">Roadmap</NavLink>
             </nav>
 
@@ -68,8 +67,8 @@ export function MainLayout({ children }: MainLayoutProps) {
                     <NavLink href="/" active>
                       Trade
                     </NavLink>
-                    <NavLink href="/portfolio">Portfolio</NavLink>
-                    <NavLink href="/intents">My Intents</NavLink>
+                    <NavLink href="/demo">Demo</NavLink>
+                    <NavLink href="/roadmap">Roadmap</NavLink>
                   </nav>
                 </SheetContent>
               </Sheet>

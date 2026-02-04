@@ -4,3 +4,7 @@ export { AdvancedTrading } from "./AdvancedTrading";
 export { PrivateIntent } from "./PrivateIntent";
 export { Referrals } from "./Referrals";
 export { ZkLoginButton, ZkLoginCard, ZkLoginFeatures } from "./ZkLogin";
+export { IntentComparator } from "./IntentComparator";
+export { SolverRace } from "./SolverRace";
+export { WhySuiPanel } from "./WhySuiPanel";
+export { ReferralDashboard } from "./ReferralDashboard";
