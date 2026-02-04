@@ -1,69 +1,71 @@
 use p3_air::{Air, AirBuilder, BaseAir};
-use p3_field::Field;
+use p3_field::{Field, PrimeField64};
 use p3_matrix::dense::RowMajorMatrix;
 use p3_matrix::Matrix;
 use std::marker::PhantomData;
 
 pub const NUM_COLS: usize = 16;
 
-pub struct IntentExecutionAir<F: Field> {
+pub struct IntentExecutionAir<F> {
     _phantom: PhantomData<F>,
 }
 
-impl<F: Field> Default for IntentExecutionAir<F> {
+impl<F> Default for IntentExecutionAir<F> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<F: Field> IntentExecutionAir<F> {
+impl<F> IntentExecutionAir<F> {
     pub fn new() -> Self {
         Self {
             _phantom: PhantomData,
         }
     }
+}
 
+impl<F: PrimeField64> IntentExecutionAir<F> {
     pub fn generate_trace(&self, witness: &IntentExecutionWitness) -> RowMajorMatrix<F> {
         let num_rows = 1 << 4;
-        let mut values = vec![F::zero(); num_rows * NUM_COLS];
+        let mut values = vec![F::ZERO; num_rows * NUM_COLS];
 
-        let input_amount = F::from_canonical_u64(witness.input_amount);
-        let output_amount = F::from_canonical_u64(witness.output_amount);
-        let min_output = F::from_canonical_u64(witness.min_output_amount);
-        let max_input = F::from_canonical_u64(witness.max_input_amount);
-        let timestamp = F::from_canonical_u64(witness.timestamp);
-        let deadline = F::from_canonical_u64(witness.deadline);
+        let input_amount = F::from_u64(witness.input_amount);
+        let output_amount = F::from_u64(witness.output_amount);
+        let min_output = F::from_u64(witness.min_output_amount);
+        let max_input = F::from_u64(witness.max_input_amount);
+        let timestamp = F::from_u64(witness.timestamp);
+        let deadline = F::from_u64(witness.deadline);
 
         for i in 0..num_rows {
             let row_offset = i * NUM_COLS;
-            
+
             values[row_offset] = input_amount;
             values[row_offset + 1] = output_amount;
             values[row_offset + 2] = min_output;
             values[row_offset + 3] = max_input;
             values[row_offset + 4] = timestamp;
             values[row_offset + 5] = deadline;
-            
+
             for j in 0..8 {
-                values[row_offset + 6 + j] = F::from_canonical_u64(
+                values[row_offset + 6 + j] = F::from_u64(
                     ((witness.commitment[j * 4] as u64) << 24)
                         | ((witness.commitment[j * 4 + 1] as u64) << 16)
                         | ((witness.commitment[j * 4 + 2] as u64) << 8)
                         | (witness.commitment[j * 4 + 3] as u64),
                 );
             }
-            
-            let output_ok = if output_amount.as_canonical_u64() >= min_output.as_canonical_u64() {
-                F::one()
+
+            let output_ok = if witness.output_amount >= witness.min_output_amount {
+                F::ONE
             } else {
-                F::zero()
+                F::ZERO
             };
             values[row_offset + 14] = output_ok;
-            
-            let input_ok = if input_amount.as_canonical_u64() <= max_input.as_canonical_u64() {
-                F::one()
+
+            let input_ok = if witness.input_amount <= witness.max_input_amount {
+                F::ONE
             } else {
-                F::zero()
+                F::ZERO
             };
             values[row_offset + 15] = input_ok;
         }
@@ -78,10 +80,14 @@ impl<F: Field> BaseAir<F> for IntentExecutionAir<F> {
     }
 }
 
-impl<AB: AirBuilder> Air<AB> for IntentExecutionAir<AB::F> {
+impl<AB: AirBuilder> Air<AB> for IntentExecutionAir<AB::F>
+where
+    AB::F: Field,
+{
     fn eval(&self, builder: &mut AB) {
         let main = builder.main();
         let local = main.row_slice(0);
+        let local = local.expect("main trace should have at least one row");
 
         let input_amount = local[0];
         let output_amount = local[1];
@@ -96,10 +102,10 @@ impl<AB: AirBuilder> Air<AB> for IntentExecutionAir<AB::F> {
         builder.assert_bool(input_ok);
 
         let output_diff = output_amount - min_output;
-        builder.when(output_ok).assert_zero(output_diff * (AB::Expr::one() - output_ok));
+        builder.when(output_ok).assert_zero(output_diff * (AB::Expr::ONE - output_ok));
 
         let input_diff = max_input - input_amount;
-        builder.when(input_ok).assert_zero(input_diff * (AB::Expr::one() - input_ok));
+        builder.when(input_ok).assert_zero(input_diff * (AB::Expr::ONE - input_ok));
 
         builder.assert_one(output_ok);
         builder.assert_one(input_ok);

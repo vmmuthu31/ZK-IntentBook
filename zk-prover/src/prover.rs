@@ -3,11 +3,12 @@ use p3_baby_bear::BabyBear;
 use p3_challenger::DuplexChallenger;
 use p3_commit::ExtensionMmcs;
 use p3_field::extension::BinomialExtensionField;
-use p3_fri::{FriConfig, TwoAdicFriPcs};
-use p3_merkle_tree::FieldMerkleTreeMmcs;
-use p3_poseidon2::{Poseidon2, Poseidon2ExternalMatrixGeneral};
+use p3_field::Field;
+use p3_fri::TwoAdicFriPcs;
+use p3_merkle_tree::MerkleTreeMmcs;
+use p3_poseidon2::Poseidon2;
 use p3_symmetric::{PaddingFreeSponge, TruncatedPermutation};
-use p3_uni_stark::{prove, verify, StarkConfig};
+use p3_uni_stark::StarkConfig;
 use sha2::{Digest, Sha256};
 use tracing::info;
 
@@ -16,9 +17,25 @@ use crate::types::{Execution, Intent, ProofResponse, PublicInputs};
 
 type Val = BabyBear;
 type Challenge = BinomialExtensionField<Val, 4>;
+type Perm = Poseidon2<Val, p3_poseidon2::DiffusionMatrixBabyBear, 16, 7>;
+type MyHash = PaddingFreeSponge<Perm, 16, 8, 8>;
+type MyCompress = TruncatedPermutation<Perm, 2, 8, 16>;
+type ValMmcs = MerkleTreeMmcs<
+    <Val as Field>::Packing,
+    <Val as Field>::Packing,
+    MyHash,
+    MyCompress,
+    8,
+>;
+type ChallengeMmcs = ExtensionMmcs<Val, Challenge, ValMmcs>;
+type Dft = p3_dft::Radix2DitParallel<Val>;
+type Pcs = TwoAdicFriPcs<Val, Dft, ValMmcs, ChallengeMmcs>;
+type Challenger = DuplexChallenger<Val, Perm, 16, 8>;
+type MyStarkConfig = StarkConfig<Pcs, Challenge, Challenger>;
 
 pub struct IntentProver {
-    config: StarkConfig<Val>,
+    _config: MyStarkConfig,
+    perm: Perm,
 }
 
 impl Default for IntentProver {
@@ -29,52 +46,41 @@ impl Default for IntentProver {
 
 impl IntentProver {
     pub fn new() -> Self {
+        let (config, perm) = Self::create_config();
         Self {
-            config: Self::create_config(),
+            _config: config,
+            perm,
         }
     }
 
-    fn create_config() -> StarkConfig<Val> {
-        type Perm = Poseidon2<Val, Poseidon2ExternalMatrixGeneral, 16, 7>;
-        type MyHash = PaddingFreeSponge<Perm, 16, 8, 8>;
-        type MyCompress = TruncatedPermutation<Perm, 2, 8, 16>;
-        type ValMmcs = FieldMerkleTreeMmcs<
-            <Val as p3_field::Field>::Packing,
-            <Val as p3_field::Field>::Packing,
-            MyHash,
-            MyCompress,
-            8,
-        >;
-        type ChallengeMmcs = ExtensionMmcs<Val, Challenge, ValMmcs>;
-        type Pcs = TwoAdicFriPcs<Val, ValMmcs, ChallengeMmcs>;
-
+    fn create_config() -> (MyStarkConfig, Perm) {
         let perm = Perm::new_from_rng_128(
-            Poseidon2ExternalMatrixGeneral,
+            p3_poseidon2::DiffusionMatrixBabyBear::default(),
             &mut rand::thread_rng(),
         );
         let hash = MyHash::new(perm.clone());
         let compress = MyCompress::new(perm.clone());
         let val_mmcs = ValMmcs::new(hash, compress);
         let challenge_mmcs = ChallengeMmcs::new(val_mmcs.clone());
-        
-        let fri_config = FriConfig {
+        let dft = Dft::default();
+
+        let fri_config = p3_fri::FriConfig {
             log_blowup: 1,
             num_queries: 100,
             proof_of_work_bits: 16,
             mmcs: challenge_mmcs,
         };
-        
-        let pcs = Pcs::new(val_mmcs, fri_config);
-        
-        type Challenger = DuplexChallenger<Val, Perm, 16, 8>;
-        
-        StarkConfig::new(pcs)
+
+        let pcs = Pcs::new(dft, val_mmcs, fri_config);
+        let challenger = DuplexChallenger::new(perm.clone());
+
+        (StarkConfig::new(pcs, challenger), perm)
     }
 
     pub fn generate_proof(&self, intent: &Intent, execution: &Execution) -> Result<ProofResponse> {
         info!("Generating proof for intent execution");
 
-        execution.validate_against_intent(intent)?;
+        execution.validate_against_intent(intent).map_err(|e| anyhow!(e))?;
 
         let witness = IntentExecutionWitness::new(
             execution.executed_input_amount,
@@ -114,15 +120,15 @@ impl IntentProver {
 
     fn generate_stark_proof(
         &self,
-        air: &IntentExecutionAir<Val>,
-        trace: p3_matrix::dense::RowMajorMatrix<Val>,
+        _air: &IntentExecutionAir<Val>,
+        _trace: p3_matrix::dense::RowMajorMatrix<Val>,
     ) -> Result<Vec<u8>> {
         let proof_placeholder = vec![0u8; 256];
-        
+
         Ok(proof_placeholder)
     }
 
-    pub fn verify_proof(&self, proof: &[u8], public_inputs: &PublicInputs) -> Result<bool> {
+    pub fn verify_proof(&self, proof: &[u8], _public_inputs: &PublicInputs) -> Result<bool> {
         info!("Verifying proof");
 
         if proof.is_empty() {
