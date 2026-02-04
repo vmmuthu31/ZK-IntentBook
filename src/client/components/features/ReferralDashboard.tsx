@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -28,9 +28,19 @@ import {
   Shield,
   Sparkles,
   BarChart3,
+  AlertCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useIntentWallet } from "@/client/hooks";
+import {
+  getAllReferrals,
+  type ReferralInfo,
+} from "@/server/actions/referral.actions";
+import {
+  getRecentSettlements,
+  type SettlementEvent,
+} from "@/server/actions/solver.actions";
 
 interface TradeRecord {
   id: string;
@@ -43,37 +53,62 @@ interface TradeRecord {
   proofVerified: boolean;
 }
 
-function generateMockTrades(): TradeRecord[] {
-  const pairs = ["SUI/USDC", "DEEP/SUI", "WETH/USDC"];
-  const now = Date.now();
-
-  return Array.from({ length: 5 }, (_, i) => ({
+function mapSettlementsToTrades(settlements: SettlementEvent[]): TradeRecord[] {
+  return settlements.map((s, i) => ({
     id: `trade-${i}`,
-    timestamp: new Date(now - i * 3600000 - Math.random() * 1800000),
-    pair: pairs[Math.floor(Math.random() * pairs.length)],
-    size: Math.round(100 + Math.random() * 5000),
-    feeEarned: Number((0.001 + Math.random() * 0.05).toFixed(4)),
-    referralAddress: `0x${Array.from({ length: 8 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}...${Array.from({ length: 4 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`,
-    txHash: `0x${Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join("")}`,
-    proofVerified: true,
+    timestamp: s.timestamp,
+    pair: s.pair,
+    size: parseFloat(s.quoteAmount) / 1e9,
+    feeEarned: (parseFloat(s.quoteAmount) * 0.0001) / 1e9,
+    referralAddress: s.solver,
+    txHash: s.digest,
+    proofVerified: s.proofVerified,
   }));
 }
 
 export function ReferralDashboard() {
-  const [trades, setTrades] = useState<TradeRecord[]>(generateMockTrades());
+  const { address } = useIntentWallet();
+  const [trades, setTrades] = useState<TradeRecord[]>([]);
+  const [referrals, setReferrals] = useState<ReferralInfo[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  const refreshData = () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
-    setTimeout(() => {
-      setTrades(generateMockTrades());
+    setError(null);
+
+    try {
+      const [settlementsData, referralData] = await Promise.all([
+        getRecentSettlements(20),
+        address ? getAllReferrals(address) : Promise.resolve([]),
+      ]);
+
+      setTrades(mapSettlementsToTrades(settlementsData));
+      setReferrals(referralData);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Failed to fetch data");
+    } finally {
       setIsLoading(false);
-    }, 800);
+    }
+  }, [address]);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  const refreshData = () => {
+    fetchData();
   };
 
-  const totalFees = trades.reduce((sum, t) => sum + t.feeEarned, 0);
-  const totalVolume = trades.reduce((sum, t) => sum + t.size, 0);
+  const totalFees = referrals.reduce(
+    (sum, r) => sum + parseFloat(r.earnedFees) / 1e9,
+    0,
+  );
+  const totalVolume = referrals.reduce(
+    (sum, r) => sum + parseFloat(r.totalVolume) / 1e9,
+    0,
+  );
   const tradeCount = trades.length;
 
   const copyToClipboard = (text: string, id: string) => {
@@ -153,6 +188,22 @@ export function ReferralDashboard() {
             <div className="text-xs text-slate-400 mt-1">All time</div>
           </div>
         </div>
+
+        {error && (
+          <div className="p-4 rounded-xl bg-red-900/20 border border-red-500/20 flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-red-400" />
+            <p className="text-sm text-red-300">{error}</p>
+          </div>
+        )}
+
+        {!address && (
+          <div className="p-4 rounded-xl bg-blue-900/20 border border-blue-500/20 flex items-center gap-3">
+            <AlertCircle className="h-5 w-5 text-blue-400" />
+            <p className="text-sm text-blue-300">
+              Connect wallet to view your personal referral statistics
+            </p>
+          </div>
+        )}
 
         <div className="rounded-xl border border-white/5 overflow-hidden">
           <Table>

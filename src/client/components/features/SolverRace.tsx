@@ -23,8 +23,14 @@ import {
   Shield,
   Cpu,
   Activity,
+  Wifi,
+  WifiOff,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  getSolverStatus,
+  type SolverInfo,
+} from "@/server/actions/solver.actions";
 
 interface Solver {
   id: string;
@@ -37,44 +43,24 @@ interface Solver {
   reputation: number;
 }
 
-const INITIAL_SOLVERS: Solver[] = [
-  {
-    id: "solver-1",
-    name: "FastProver",
-    avatar: "⚡",
-    proofTime: null,
-    status: "waiting",
+const SOLVER_AVATARS: Record<string, string> = {
+  FastProver: "⚡",
+  DeepSolve: "🧠",
+  "ZK-Master": "🔐",
+  QuickSettle: "🚀",
+};
+
+function mapSolverInfoToSolver(info: SolverInfo): Solver {
+  return {
+    id: info.id,
+    name: info.name,
+    avatar: SOLVER_AVATARS[info.name] || "🔷",
+    proofTime: info.proofTime,
+    status: info.isActive ? "waiting" : "waiting",
     gasEstimate: 0.0012,
-    reputation: 98,
-  },
-  {
-    id: "solver-2",
-    name: "DeepSolve",
-    avatar: "🧠",
-    proofTime: null,
-    status: "waiting",
-    gasEstimate: 0.0014,
-    reputation: 95,
-  },
-  {
-    id: "solver-3",
-    name: "ZK-Master",
-    avatar: "🔐",
-    proofTime: null,
-    status: "waiting",
-    gasEstimate: 0.0011,
-    reputation: 92,
-  },
-  {
-    id: "solver-4",
-    name: "QuickSettle",
-    avatar: "🚀",
-    proofTime: null,
-    status: "waiting",
-    gasEstimate: 0.0015,
-    reputation: 89,
-  },
-];
+    reputation: Math.round(info.successRate),
+  };
+}
 
 function SolverRow({
   solver,
@@ -172,20 +158,132 @@ function SolverRow({
   );
 }
 
+const SOLVER_WS_URL =
+  process.env.NEXT_PUBLIC_SOLVER_WS_URL || "ws://localhost:3002";
+
+const DEFAULT_SOLVERS: Solver[] = [
+  {
+    id: "solver-1",
+    name: "FastProver",
+    avatar: "⚡",
+    proofTime: null,
+    status: "waiting",
+    gasEstimate: 0.0012,
+    reputation: 98,
+  },
+  {
+    id: "solver-2",
+    name: "DeepSolve",
+    avatar: "🧠",
+    proofTime: null,
+    status: "waiting",
+    gasEstimate: 0.0014,
+    reputation: 95,
+  },
+  {
+    id: "solver-3",
+    name: "ZK-Master",
+    avatar: "🔐",
+    proofTime: null,
+    status: "waiting",
+    gasEstimate: 0.0011,
+    reputation: 92,
+  },
+];
+
 export function SolverRace() {
-  const [solvers, setSolvers] = useState<Solver[]>(INITIAL_SOLVERS);
+  const [solvers, setSolvers] = useState<Solver[]>(DEFAULT_SOLVERS);
   const [isRacing, setIsRacing] = useState(false);
   const [racePhase, setRacePhase] = useState<
     "idle" | "starting" | "racing" | "complete"
   >("idle");
   const [elapsedTime, setElapsedTime] = useState(0);
+  const [wsConnected, setWsConnected] = useState(false);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const wsRef = useRef<WebSocket | null>(null);
+
+  useEffect(() => {
+    const fetchSolvers = async () => {
+      try {
+        const status = await getSolverStatus();
+        if (status.solvers.length > 0) {
+          setSolvers(status.solvers.map(mapSolverInfoToSolver));
+        }
+      } catch {
+        console.warn("Failed to fetch solver status");
+      }
+    };
+    fetchSolvers();
+  }, []);
+
+  useEffect(() => {
+    const connectWebSocket = () => {
+      try {
+        const ws = new WebSocket(SOLVER_WS_URL);
+
+        ws.onopen = () => {
+          setWsConnected(true);
+          ws.send(JSON.stringify({ type: "get_public_key" }));
+        };
+
+        ws.onmessage = (event) => {
+          try {
+            const message = JSON.parse(event.data);
+
+            if (message.type === "solver_update") {
+              setSolvers((prev) =>
+                prev.map((s) =>
+                  s.id === message.solverId
+                    ? {
+                        ...s,
+                        proofTime: message.proofTime,
+                        status: message.status,
+                        failReason: message.failReason,
+                      }
+                    : s,
+                ),
+              );
+            }
+
+            if (message.type === "race_complete") {
+              setRacePhase("complete");
+              setIsRacing(false);
+              if (timerRef.current) clearInterval(timerRef.current);
+            }
+          } catch {
+            console.warn("Failed to parse WebSocket message");
+          }
+        };
+
+        ws.onclose = () => {
+          setWsConnected(false);
+          setTimeout(connectWebSocket, 3000);
+        };
+
+        ws.onerror = () => {
+          setWsConnected(false);
+        };
+
+        wsRef.current = ws;
+      } catch {
+        setWsConnected(false);
+      }
+    };
+
+    connectWebSocket();
+
+    return () => {
+      wsRef.current?.close();
+    };
+  }, []);
 
   const resetRace = useCallback(() => {
     setIsRacing(false);
     setRacePhase("idle");
     setElapsedTime(0);
-    setSolvers(INITIAL_SOLVERS);
+    setSolvers((prev) =>
+      prev.map((s) => ({ ...s, status: "waiting" as const, proofTime: null })),
+    );
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
@@ -206,66 +304,74 @@ export function SolverRace() {
         setElapsedTime((prev) => prev + 10);
       }, 10);
 
-      const solverResults = [
-        { id: "solver-1", time: 120 + Math.random() * 40, success: true },
-        {
-          id: "solver-2",
-          time: 180 + Math.random() * 60,
-          success: Math.random() > 0.3,
-        },
-        { id: "solver-3", time: 140 + Math.random() * 50, success: true },
-        {
-          id: "solver-4",
-          time: 200 + Math.random() * 80,
-          success: Math.random() > 0.5,
-        },
-      ];
+      if (wsConnected && wsRef.current?.readyState === WebSocket.OPEN) {
+        wsRef.current.send(
+          JSON.stringify({
+            type: "submit_intent",
+            payload: {
+              ciphertext: "demo_race",
+              ephemeralPublicKey: "demo",
+              nonce: "demo",
+              commitment: "demo_" + Date.now(),
+              userAddress: "0x0",
+            },
+          }),
+        );
+      } else {
+        const solverResults = solvers.map((s, i) => ({
+          id: s.id,
+          time: 100 + Math.random() * 100 + i * 30,
+          success: Math.random() > 0.2,
+        }));
 
-      solverResults.forEach((result) => {
-        setTimeout(() => {
-          setSolvers((prev) =>
-            prev.map((s) =>
-              s.id === result.id
-                ? {
-                    ...s,
-                    proofTime: Math.round(result.time),
-                    status: result.success
-                      ? ("verified" as const)
-                      : ("failed" as const),
-                    failReason: result.success
-                      ? undefined
-                      : "Constraint violation",
-                  }
-                : s,
-            ),
+        solverResults.forEach((result) => {
+          setTimeout(() => {
+            setSolvers((prev) =>
+              prev.map((s) =>
+                s.id === result.id
+                  ? {
+                      ...s,
+                      proofTime: Math.round(result.time),
+                      status: result.success
+                        ? ("verified" as const)
+                        : ("failed" as const),
+                      failReason: result.success
+                        ? undefined
+                        : "Constraint violation",
+                    }
+                  : s,
+              ),
+            );
+          }, result.time);
+        });
+
+        const winnerResult = solverResults
+          .filter((r) => r.success)
+          .sort((a, b) => a.time - b.time)[0];
+
+        if (winnerResult) {
+          setTimeout(
+            () => {
+              setRacePhase("complete");
+              setIsRacing(false);
+              if (timerRef.current) {
+                clearInterval(timerRef.current);
+              }
+
+              setSolvers((prev) =>
+                prev.map((s) =>
+                  s.id === winnerResult.id
+                    ? { ...s, status: "winner" as const }
+                    : s,
+                ),
+              );
+            },
+            Math.max(...solverResults.map((r) => r.time)) + 100,
           );
-        }, result.time);
-      });
-
-      const winnerResult = solverResults
-        .filter((r) => r.success)
-        .sort((a, b) => a.time - b.time)[0];
-
-      setTimeout(
-        () => {
-          setRacePhase("complete");
-          setIsRacing(false);
-          if (timerRef.current) {
-            clearInterval(timerRef.current);
-          }
-
-          setSolvers((prev) =>
-            prev.map((s) =>
-              s.id === winnerResult.id
-                ? { ...s, status: "winner" as const }
-                : s,
-            ),
-          );
-        },
-        Math.max(...solverResults.map((r) => r.time)) + 100,
-      );
+        }
+      }
     }, 500);
-  }, [resetRace]);
+  }, [resetRace, wsConnected, solvers]);
 
   useEffect(() => {
     return () => {
@@ -296,19 +402,37 @@ export function SolverRace() {
               </CardDescription>
             </div>
           </div>
-          {racePhase !== "idle" && (
+          <div className="flex items-center gap-2">
             <Badge
+              variant="outline"
               className={cn(
-                "font-mono",
-                racePhase === "complete"
-                  ? "bg-green-500/20 text-green-400"
-                  : "bg-blue-500/20 text-blue-400",
+                "text-xs",
+                wsConnected
+                  ? "border-green-500/30 text-green-400"
+                  : "border-slate-500/30 text-slate-400",
               )}
             >
-              <Clock className="h-3 w-3 mr-1" />
-              {(elapsedTime / 1000).toFixed(2)}s
+              {wsConnected ? (
+                <Wifi className="h-3 w-3 mr-1" />
+              ) : (
+                <WifiOff className="h-3 w-3 mr-1" />
+              )}
+              {wsConnected ? "Live" : "Offline"}
             </Badge>
-          )}
+            {racePhase !== "idle" && (
+              <Badge
+                className={cn(
+                  "font-mono",
+                  racePhase === "complete"
+                    ? "bg-green-500/20 text-green-400"
+                    : "bg-blue-500/20 text-blue-400",
+                )}
+              >
+                <Clock className="h-3 w-3 mr-1" />
+                {(elapsedTime / 1000).toFixed(2)}s
+              </Badge>
+            )}
+          </div>
         </div>
       </CardHeader>
 
