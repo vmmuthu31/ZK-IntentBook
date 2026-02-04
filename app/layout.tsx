@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { WalletProvider, ThemeProvider } from "@/client/providers";
+import {
+  WalletProvider,
+  ThemeProvider,
+  ZkLoginProvider,
+} from "@/client/providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -29,7 +33,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider>
-          <WalletProvider>{children}</WalletProvider>
+          <WalletProvider>
+            <ZkLoginProvider>{children}</ZkLoginProvider>
+          </WalletProvider>
         </ThemeProvider>
       </body>
     </html>

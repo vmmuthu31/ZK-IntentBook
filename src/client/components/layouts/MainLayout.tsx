@@ -5,14 +5,14 @@ import { ConnectButton, useWallet } from "@suiet/wallet-kit";
 import { Shield, Zap, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { shortenAddress } from "@/shared/utils";
+import { ZkLoginButton } from "../features/ZkLogin";
 
 interface MainLayoutProps {
   children: ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const { connected, account } = useWallet();
+  const { connected } = useWallet();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
@@ -42,12 +42,15 @@ export function MainLayout({ children }: MainLayoutProps) {
               </NavLink>
               <NavLink href="/portfolio">Portfolio</NavLink>
               <NavLink href="/intents">My Intents</NavLink>
+              <NavLink href="/roadmap">Roadmap</NavLink>
             </nav>
 
             <div className="flex items-center gap-3">
               <div className="hidden sm:block">
                 <NetworkBadge />
               </div>
+
+              <ZkLoginButton />
 
               <ConnectButton className="!bg-gradient-to-r !from-indigo-600 !to-purple-600 hover:!from-indigo-500 hover:!to-purple-500 !border-0 !rounded-xl !px-4 !py-2 !text-sm !font-medium !transition-all !duration-200" />
 
