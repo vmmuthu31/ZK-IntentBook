@@ -8,3 +8,5 @@ export { IntentComparator } from "./IntentComparator";
 export { SolverRace } from "./SolverRace";
 export { WhySuiPanel } from "./WhySuiPanel";
 export { ReferralDashboard } from "./ReferralDashboard";
+export { LendingDashboard } from "./LendingDashboard";
+export { StrategyDashboard } from "./StrategyDashboard";

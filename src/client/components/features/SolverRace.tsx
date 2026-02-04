@@ -90,7 +90,7 @@ function SolverRow({
     proving: "bg-blue-500 animate-pulse",
     verified: "bg-green-500",
     failed: "bg-red-500",
-    winner: "bg-gradient-to-r from-amber-400 to-yellow-500",
+    winner: "bg-linear-to-r from-amber-400 to-yellow-500",
   };
 
   const statusText = {
@@ -106,7 +106,7 @@ function SolverRow({
       className={cn(
         "p-4 rounded-xl border transition-all duration-300",
         solver.status === "winner"
-          ? "bg-gradient-to-r from-amber-900/30 to-yellow-900/30 border-amber-500/50"
+          ? "bg-linear-to-r from-amber-900/30 to-yellow-900/30 border-amber-500/50"
           : solver.status === "failed"
             ? "bg-red-900/10 border-red-500/20"
             : solver.status === "verified"
@@ -314,7 +314,7 @@ export function SolverRace() {
 
       <CardContent className="space-y-4">
         {racePhase === "complete" && winner && (
-          <div className="p-4 rounded-xl bg-gradient-to-r from-amber-900/30 to-yellow-900/30 border border-amber-500/30 mb-4">
+          <div className="p-4 rounded-xl bg-linear-to-r from-amber-900/30 to-yellow-900/30 border border-amber-500/30 mb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <Trophy className="h-8 w-8 text-amber-400" />
@@ -364,7 +364,7 @@ export function SolverRace() {
           <Button
             onClick={startRace}
             disabled={isRacing}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500"
+            className="flex-1 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500"
           >
             {isRacing ? (
               <>

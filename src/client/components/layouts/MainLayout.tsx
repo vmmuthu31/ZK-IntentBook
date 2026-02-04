@@ -15,8 +15,8 @@ export function MainLayout({ children }: MainLayoutProps) {
   const { connected } = useWallet();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
-      <div className="fixed inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent pointer-events-none" />
+    <div className="min-h-screen bg-linear-to-br from-slate-950 via-slate-900 to-slate-950">
+      <div className="fixed inset-0 bg-[radial-linear(ellipse_at_top,var(--tw-gradient-stops))] from-indigo-900/20 via-transparent to-transparent pointer-events-none" />
 
       <header className="sticky top-0 z-50 border-b border-white/5 bg-slate-950/80 backdrop-blur-xl">
         <div className="container mx-auto px-4">
@@ -27,7 +27,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Zap className="absolute -bottom-1 -right-1 h-4 w-4 text-amber-400" />
               </div>
               <div>
-                <h1 className="text-lg font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+                <h1 className="text-lg font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
                   ZK-IntentBook
                 </h1>
                 <p className="text-[10px] text-slate-500 -mt-0.5">
@@ -51,7 +51,7 @@ export function MainLayout({ children }: MainLayoutProps) {
 
               <ZkLoginButton />
 
-              <ConnectButton className="!bg-gradient-to-r !from-indigo-600 !to-purple-600 hover:!from-indigo-500 hover:!to-purple-500 !border-0 !rounded-xl !px-4 !py-2 !text-sm !font-medium !transition-all !duration-200" />
+              <ConnectButton className="bg-linear-to-r! from-indigo-600! to-purple-600! hover:from-indigo-500! hover:to-purple-500! border-0! rounded-xl! px-4! py-2! text-sm! font-medium! transition-all! duration-200!" />
 
               <Sheet>
                 <SheetTrigger asChild className="md:hidden">

@@ -65,3 +65,13 @@ export function formatAmount(amount: string, decimals: number): string {
   const value = BigInt(amount);
   return formatBalance(value, decimals);
 }
+
+export function formatNumber(value: number, decimals = 2): string {
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(decimals)}M`;
+  }
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(decimals)}K`;
+  }
+  return value.toFixed(decimals);
+}

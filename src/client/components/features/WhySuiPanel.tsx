@@ -84,7 +84,7 @@ export function WhySuiPanel() {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <div className="p-4 rounded-xl bg-gradient-to-r from-cyan-900/20 to-blue-900/20 border border-cyan-500/20">
+        <div className="p-4 rounded-xl bg-linear-to-r from-cyan-900/20 to-blue-900/20 border border-cyan-500/20">
           <h4 className="font-semibold text-cyan-300 mb-3 flex items-center gap-2">
             <Workflow className="h-4 w-4" />
             Programmable Transaction Blocks (PTBs)

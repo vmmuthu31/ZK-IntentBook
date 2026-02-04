@@ -339,7 +339,7 @@ export function PrivateIntent() {
               <Button
                 type="submit"
                 disabled={!connected || isSubmitting}
-                className="w-full h-12 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium rounded-xl transition-all disabled:opacity-50"
+                className="w-full h-12 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium rounded-xl transition-all disabled:opacity-50"
               >
                 {!connected ? (
                   "Connect Wallet"

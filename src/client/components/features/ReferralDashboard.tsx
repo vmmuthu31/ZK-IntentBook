@@ -231,7 +231,7 @@ export function ReferralDashboard() {
           </Table>
         </div>
 
-        <div className="p-4 rounded-xl bg-gradient-to-r from-green-900/20 to-emerald-900/20 border border-green-500/20">
+        <div className="p-4 rounded-xl bg-linear-to-r from-green-900/20 to-emerald-900/20 border border-green-500/20">
           <div className="flex items-start gap-3">
             <Sparkles className="h-5 w-5 text-green-400 mt-0.5" />
             <div>

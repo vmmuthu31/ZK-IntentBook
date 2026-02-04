@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import {
   Card,
   CardContent,
@@ -12,62 +12,33 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   Eye,
   EyeOff,
-  TrendingDown,
   Shield,
   AlertTriangle,
   Check,
   X,
   Zap,
   Lock,
-  Users,
-  ArrowRight,
   Sparkles,
+  RefreshCw,
+  Activity,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-interface ComparisonMetrics {
-  expectedPrice: number;
-  finalPrice: number;
-  slippage: number;
-  mevLoss: number;
-  frontRunRisk: boolean;
-  executionTime: number;
-  priceProtected: boolean;
-}
-
-function generatePublicMetrics(tradeSize: number): ComparisonMetrics {
-  const baseSlippage = 0.1 + (tradeSize / 10000) * 0.5;
-  const mevLoss = tradeSize > 500 ? tradeSize * 0.02 : 0;
-  const expectedPrice = 1.234;
-  const priceImpact = baseSlippage / 100;
-
-  return {
-    expectedPrice,
-    finalPrice: expectedPrice * (1 - priceImpact),
-    slippage: baseSlippage,
-    mevLoss,
-    frontRunRisk: tradeSize > 200,
-    executionTime: 150 + Math.random() * 100,
-    priceProtected: false,
-  };
-}
-
-function generatePrivateMetrics(tradeSize: number): ComparisonMetrics {
-  const baseSlippage = 0.02 + (tradeSize / 10000) * 0.08;
-  const expectedPrice = 1.234;
-
-  return {
-    expectedPrice,
-    finalPrice: expectedPrice * (1 - baseSlippage / 100),
-    slippage: baseSlippage,
-    mevLoss: 0,
-    frontRunRisk: false,
-    executionTime: 280 + Math.random() * 50,
-    priceProtected: true,
-  };
-}
+import {
+  analyzePublicTrade,
+  analyzePrivateTrade,
+  type TradeAnalysis,
+  type PrivateTradeAnalysis,
+} from "@/server/actions/analysis.actions";
+import { POOLS } from "@/shared/constants/pools";
 
 interface MetricRowProps {
   label: string;
@@ -109,52 +80,62 @@ function MetricRow({
 
 export function IntentComparator() {
   const [tradeSize, setTradeSize] = useState(1000);
-  const [publicMetrics, setPublicMetrics] = useState<ComparisonMetrics | null>(
+  const [selectedPool, setSelectedPool] = useState("SUI_USDC");
+  const [isBuy, setIsBuy] = useState(true);
+  const [publicMetrics, setPublicMetrics] = useState<TradeAnalysis | null>(
     null,
   );
   const [privateMetrics, setPrivateMetrics] =
-    useState<ComparisonMetrics | null>(null);
-  const [comparisonKey, setComparisonKey] = useState(0);
+    useState<PrivateTradeAnalysis | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLive, setIsLive] = useState(true);
 
-  const isComparing = publicMetrics === null || privateMetrics === null;
+  const runComparison = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const [publicResult, privateResult] = await Promise.all([
+        analyzePublicTrade(selectedPool, tradeSize, isBuy),
+        analyzePrivateTrade(selectedPool, tradeSize, isBuy),
+      ]);
+
+      if (publicResult.success && publicResult.data) {
+        setPublicMetrics(publicResult.data);
+      } else {
+        setError(publicResult.error || "Failed to analyze public trade");
+      }
+
+      if (privateResult.success && privateResult.data) {
+        setPrivateMetrics(privateResult.data);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Analysis failed");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedPool, tradeSize, isBuy]);
 
   useEffect(() => {
-    const timer0 = setTimeout(() => {
-      setPublicMetrics(null);
-      setPrivateMetrics(null);
-    }, 0);
+    runComparison();
+  }, [runComparison]);
 
-    const timer1 = setTimeout(() => {
-      setPublicMetrics(generatePublicMetrics(tradeSize));
-    }, 600);
+  useEffect(() => {
+    if (!isLive) return;
 
-    const timer2 = setTimeout(() => {
-      setPrivateMetrics(generatePrivateMetrics(tradeSize));
-    }, 1200);
+    const interval = setInterval(runComparison, 10000);
+    return () => clearInterval(interval);
+  }, [isLive, runComparison]);
 
-    return () => {
-      clearTimeout(timer0);
-      clearTimeout(timer1);
-      clearTimeout(timer2);
-    };
-  }, [tradeSize, comparisonKey]);
-
-  const runComparison = () => {
-    setComparisonKey((prev) => prev + 1);
-  };
-
-  const savings =
-    publicMetrics && privateMetrics
-      ? publicMetrics.mevLoss +
-        (publicMetrics.slippage - privateMetrics.slippage) * (tradeSize / 100)
-      : 0;
+  const savings = privateMetrics?.savingsEstimate || 0;
 
   return (
     <Card className="bg-slate-900/50 border-white/5 backdrop-blur-sm">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-amber-500 to-orange-600">
+            <div className="p-2 rounded-xl bg-linear-to-r from-amber-500 to-orange-600">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -162,44 +143,106 @@ export function IntentComparator() {
                 Public vs Private Comparison
               </CardTitle>
               <CardDescription>
-                See exactly what you save with ZK-IntentBook
+                Real-time analysis from DeepBook order book
               </CardDescription>
             </div>
           </div>
-          <Badge className="bg-amber-500/10 text-amber-400 border-amber-500/20">
-            Live Analysis
-          </Badge>
+          <div className="flex items-center gap-2">
+            <Badge
+              className={cn(
+                "cursor-pointer",
+                isLive
+                  ? "bg-green-500/20 text-green-400 border-green-500/30"
+                  : "bg-slate-500/20 text-slate-400",
+              )}
+              onClick={() => setIsLive(!isLive)}
+            >
+              <Activity
+                className={cn("h-3 w-3 mr-1", isLive && "animate-pulse")}
+              />
+              {isLive ? "Live" : "Paused"}
+            </Badge>
+          </div>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-6">
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs text-slate-400 mb-1 block">Pool</label>
+            <Select value={selectedPool} onValueChange={setSelectedPool}>
+              <SelectTrigger className="bg-slate-800/50 border-white/10">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-white/10">
+                {Object.entries(POOLS).map(([key, pool]) => (
+                  <SelectItem key={key} value={key}>
+                    {pool.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          <div>
+            <label className="text-xs text-slate-400 mb-1 block">
+              Direction
+            </label>
+            <div className="flex bg-slate-800/50 rounded-lg p-1">
+              <button
+                onClick={() => setIsBuy(true)}
+                className={cn(
+                  "flex-1 py-2 rounded-md text-sm font-medium transition-all",
+                  isBuy ? "bg-green-600 text-white" : "text-slate-400",
+                )}
+              >
+                Buy
+              </button>
+              <button
+                onClick={() => setIsBuy(false)}
+                className={cn(
+                  "flex-1 py-2 rounded-md text-sm font-medium transition-all",
+                  !isBuy ? "bg-red-600 text-white" : "text-slate-400",
+                )}
+              >
+                Sell
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div>
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-slate-400">Trade Size</span>
             <span className="text-lg font-bold text-white">
-              ${tradeSize.toLocaleString()} USDC
+              ${tradeSize.toLocaleString()}
             </span>
           </div>
           <Slider
             value={[tradeSize]}
             onValueChange={([v]) => setTradeSize(v)}
             min={100}
-            max={10000}
+            max={50000}
             step={100}
             className="w-full"
           />
           <div className="flex justify-between mt-1 text-xs text-slate-500">
             <span>$100</span>
-            <span>$10,000</span>
+            <span>$50,000</span>
           </div>
         </div>
+
+        {error && (
+          <div className="p-3 rounded-lg bg-red-900/20 border border-red-500/20 text-red-400 text-sm">
+            {error}
+          </div>
+        )}
 
         <div className="grid grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-red-900/20 border border-red-500/20">
             <div className="flex items-center gap-2 mb-3">
               <Eye className="h-5 w-5 text-red-400" />
               <span className="font-semibold text-red-400">
-                Public DeepBook Order
+                Public DeepBook
               </span>
             </div>
             <div className="space-y-2">
@@ -260,65 +303,60 @@ export function IntentComparator() {
               </div>
 
               <MetricRow
-                label="Expected Price"
+                label="Mid Price"
                 publicValue={`$${publicMetrics.expectedPrice.toFixed(4)}`}
                 privateValue={`$${privateMetrics.expectedPrice.toFixed(4)}`}
               />
               <MetricRow
-                label="Final Price"
-                publicValue={`$${publicMetrics.finalPrice.toFixed(4)}`}
-                privateValue={`$${privateMetrics.finalPrice.toFixed(4)}`}
+                label="Spread"
+                publicValue={`$${publicMetrics.spread.toFixed(6)}`}
+                privateValue={`$${privateMetrics.spread.toFixed(6)}`}
+              />
+              <MetricRow
+                label="Est. Slippage"
+                publicValue={`${publicMetrics.estimatedSlippage.toFixed(3)}%`}
+                privateValue={`${privateMetrics.estimatedSlippage.toFixed(3)}%`}
                 publicBad
                 privateGood
               />
               <MetricRow
-                label="Slippage"
-                publicValue={`${publicMetrics.slippage.toFixed(2)}%`}
-                privateValue={`${privateMetrics.slippage.toFixed(2)}%`}
-                publicBad
+                label="Price Impact"
+                publicValue={`${publicMetrics.priceImpact.toFixed(3)}%`}
+                privateValue={`${privateMetrics.priceImpact.toFixed(3)}%`}
+                publicBad={publicMetrics.priceImpact > 0.1}
                 privateGood
               />
               <MetricRow
-                label="MEV Loss"
+                label="MEV Risk"
                 publicValue={
-                  publicMetrics.mevLoss > 0 ? (
+                  publicMetrics.estimatedMevRisk > 0 ? (
                     <span className="flex items-center gap-1">
                       <AlertTriangle className="h-3 w-3" />$
-                      {publicMetrics.mevLoss.toFixed(2)}
+                      {publicMetrics.estimatedMevRisk.toFixed(2)}
                     </span>
                   ) : (
                     "$0.00"
                   )
                 }
                 privateValue="$0.00"
-                publicBad={publicMetrics.mevLoss > 0}
+                publicBad={publicMetrics.estimatedMevRisk > 0}
                 privateGood
               />
               <MetricRow
-                label="Front-Run Risk"
-                publicValue={
-                  publicMetrics.frontRunRisk ? (
-                    <span className="flex items-center gap-1">
-                      <AlertTriangle className="h-3 w-3" />
-                      High
-                    </span>
-                  ) : (
-                    "Low"
-                  )
-                }
+                label="Book Depth"
+                publicValue={`$${(publicMetrics.depth.bids + publicMetrics.depth.asks).toLocaleString()}`}
                 privateValue={
                   <span className="flex items-center gap-1">
                     <Shield className="h-3 w-3" />
                     Protected
                   </span>
                 }
-                publicBad={publicMetrics.frontRunRisk}
                 privateGood
               />
             </div>
 
             {savings > 0 && (
-              <div className="p-4 rounded-xl bg-gradient-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30">
+              <div className="p-4 rounded-xl bg-linear-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30">
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="text-sm text-green-300 mb-1">
@@ -330,12 +368,13 @@ export function IntentComparator() {
                   </div>
                   <div className="text-right">
                     <div className="text-xs text-slate-400 mb-1">
-                      Protection Rate
+                      Slippage Reduction
                     </div>
                     <Badge className="bg-green-500/20 text-green-400">
                       {(
-                        ((publicMetrics.slippage - privateMetrics.slippage) /
-                          publicMetrics.slippage) *
+                        ((publicMetrics.estimatedSlippage -
+                          privateMetrics.estimatedSlippage) /
+                          Math.max(publicMetrics.estimatedSlippage, 0.001)) *
                         100
                       ).toFixed(0)}
                       % Better
@@ -349,21 +388,25 @@ export function IntentComparator() {
 
         <Button
           onClick={runComparison}
-          disabled={isComparing}
-          className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500"
+          disabled={isLoading}
+          className="w-full bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500"
         >
-          {isComparing ? (
+          {isLoading ? (
             <>
-              <Zap className="h-4 w-4 mr-2 animate-pulse" />
-              Analyzing...
+              <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+              Fetching Live Data...
             </>
           ) : (
             <>
               <Zap className="h-4 w-4 mr-2" />
-              Re-run Comparison
+              Refresh Analysis
             </>
           )}
         </Button>
+
+        <div className="text-xs text-center text-slate-500">
+          Data from DeepBook V3 • Updates every 10s when live
+        </div>
       </CardContent>
     </Card>
   );

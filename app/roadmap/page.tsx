@@ -111,8 +111,7 @@ const roadmapPhases: RoadmapPhase[] = [
     items: [
       {
         title: "Lending Pool Architecture",
-        description:
-          "Design lending pools integrated with DeepBook liquidity",
+        description: "Design lending pools integrated with DeepBook liquidity",
         status: "in-progress",
         icon: <Coins className="h-5 w-5" />,
       },
@@ -194,7 +193,7 @@ export default function RoadmapPage() {
     <MainLayout>
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
             Product Roadmap
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -210,8 +209,9 @@ export default function RoadmapPage() {
               <CardTitle>Coming Soon: Order Book Lending</CardTitle>
             </div>
             <CardDescription className="text-base">
-              Borrow and lend assets directly through DeepBook&apos;s order book.
-              Earn yield on your idle assets while maintaining full control.
+              Borrow and lend assets directly through DeepBook&apos;s order
+              book. Earn yield on your idle assets while maintaining full
+              control.
             </CardDescription>
           </CardHeader>
           <CardContent>

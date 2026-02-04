@@ -6,16 +6,27 @@ import {
   SolverRace,
   WhySuiPanel,
   ReferralDashboard,
+  LendingDashboard,
+  StrategyDashboard,
 } from "@/client/components/features";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Shield, Zap, Users, Coins, BarChart3, Sparkles } from "lucide-react";
+import {
+  Shield,
+  Zap,
+  Users,
+  Coins,
+  BarChart3,
+  Sparkles,
+  Landmark,
+  TrendingUp,
+} from "lucide-react";
 
 export default function Home() {
   return (
     <MainLayout>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
             Trade Privately on DeepBook
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -25,38 +36,52 @@ export default function Home() {
         </div>
 
         <Tabs defaultValue="trade" className="w-full">
-          <TabsList className="grid w-full grid-cols-5 bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto mb-8">
+          <TabsList className="grid w-full grid-cols-7 bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto mb-8">
             <TabsTrigger
               value="trade"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Shield className="h-4 w-4" />
               <span className="hidden sm:inline">Trade</span>
             </TabsTrigger>
             <TabsTrigger
               value="compare"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Compare</span>
             </TabsTrigger>
             <TabsTrigger
+              value="lending"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <Landmark className="h-4 w-4" />
+              <span className="hidden sm:inline">Lending</span>
+            </TabsTrigger>
+            <TabsTrigger
+              value="strategies"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-teal-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+            >
+              <TrendingUp className="h-4 w-4" />
+              <span className="hidden sm:inline">Strategies</span>
+            </TabsTrigger>
+            <TabsTrigger
               value="solvers"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Solvers</span>
             </TabsTrigger>
             <TabsTrigger
               value="referrals"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Coins className="h-4 w-4" />
               <span className="hidden sm:inline">Referrals</span>
             </TabsTrigger>
             <TabsTrigger
               value="why-sui"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-gradient-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Zap className="h-4 w-4" />
               <span className="hidden sm:inline">Why Sui</span>
@@ -122,6 +147,14 @@ export default function Home() {
                 </div>
               </div>
             </div>
+          </TabsContent>
+
+          <TabsContent value="lending" className="mt-0">
+            <LendingDashboard />
+          </TabsContent>
+
+          <TabsContent value="strategies" className="mt-0">
+            <StrategyDashboard />
           </TabsContent>
 
           <TabsContent value="solvers" className="mt-0">

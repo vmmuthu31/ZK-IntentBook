@@ -55,7 +55,7 @@ export default function DemoPage() {
             <Trophy className="h-3 w-3 mr-1" />
             Judge Demo Mode
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
             ZK-IntentBook Demo
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
