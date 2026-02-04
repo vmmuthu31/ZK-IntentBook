@@ -140,7 +140,7 @@ export function SimpleSwap() {
               variant="ghost"
               size="icon"
               onClick={handleSwapDirection}
-              className="h-10 w-10 rounded-full bg-slate-800 border border-white/10 hover:bg-slate-700 hover:border-indigo-500/50 transition-all"
+              className="h-10 w-10 rounded-full bg-slate-800 border border-white/10 hover:bg-cyan-600 hover:border-cyan-500/50 transition-all"
             >
               <ArrowDownUp className="h-4 w-4" />
             </Button>
@@ -182,7 +182,7 @@ export function SimpleSwap() {
         </div>
 
         <Button
-          className="w-full mt-6 h-12 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium rounded-xl transition-all"
+          className="w-full mt-6 h-12 bg-cyan-600 hover:bg-cyan-500 text-white font-medium rounded-xl transition-all"
           disabled={!connected || !fromAmount || !rate}
         >
           {!connected
@@ -251,7 +251,7 @@ function TokenInput({
           <SelectTrigger className="w-[130px] bg-slate-700/50 border-white/10 rounded-xl">
             <SelectValue>
               <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                <div className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-xs font-bold">
                   {asset.symbol[0]}
                 </div>
                 <span>{asset.symbol}</span>
@@ -262,7 +262,7 @@ function TokenInput({
             {ASSET_LIST.map((a) => (
               <SelectItem key={a.symbol} value={a.symbol}>
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center text-xs font-bold">
+                  <div className="w-6 h-6 rounded-full bg-cyan-600 flex items-center justify-center text-xs font-bold">
                     {a.symbol[0]}
                   </div>
                   <span>{a.symbol}</span>

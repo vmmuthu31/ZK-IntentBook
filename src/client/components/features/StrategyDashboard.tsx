@@ -235,7 +235,7 @@ function CrossPoolRebalancer({
     <Card className="bg-zinc-900/50 border-zinc-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <BarChart3 className="h-5 w-5 text-purple-400" />
+          <BarChart3 className="h-5 w-5 text-cyan-400" />
           Cross-Pool Allocations
         </CardTitle>
       </CardHeader>
@@ -327,7 +327,7 @@ function CreateMarketMaker() {
     <Card className="bg-zinc-900/50 border-zinc-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Settings className="h-5 w-5 text-blue-400" />
+          <Settings className="h-5 w-5 text-cyan-400" />
           Create Market Maker
         </CardTitle>
       </CardHeader>
@@ -410,8 +410,8 @@ function CreateMarketMaker() {
           />
         </div>
 
-        <div className="p-3 bg-blue-500/10 rounded-lg border border-blue-500/30">
-          <p className="text-sm text-blue-400">
+        <div className="p-3 bg-cyan-500/10 rounded-lg border border-cyan-500/30">
+          <p className="text-sm text-cyan-400">
             💡 Tighter spreads = more trades but less profit per trade
           </p>
         </div>
@@ -517,10 +517,7 @@ export function StrategyDashboard() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Badge
-            variant="outline"
-            className="text-green-400 border-green-400/50"
-          >
+          <Badge variant="outline" className="text-cyan-400 border-cyan-400/50">
             <Activity className="h-3 w-3 mr-1 animate-pulse" />
             Live
           </Badge>

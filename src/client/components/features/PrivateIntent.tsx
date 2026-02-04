@@ -131,7 +131,7 @@ export function PrivateIntent() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600">
+                <div className="p-2 rounded-xl bg-cyan-600">
                   <Shield className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -297,7 +297,7 @@ export function PrivateIntent() {
                 <div className="space-y-4 pt-2 border-t border-white/5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <Shield className="h-4 w-4 text-indigo-400" />
+                      <Shield className="h-4 w-4 text-cyan-400" />
                       <Label className="text-slate-300">MEV Protection</Label>
                     </div>
                     <Switch
@@ -315,11 +315,11 @@ export function PrivateIntent() {
                 </div>
               )}
 
-              <div className="p-4 rounded-xl bg-indigo-950/30 border border-indigo-500/20">
+              <div className="p-4 rounded-xl bg-cyan-950/30 border border-cyan-500/20">
                 <div className="flex items-start gap-3">
-                  <Sparkles className="h-5 w-5 text-indigo-400 mt-0.5" />
+                  <Sparkles className="h-5 w-5 text-cyan-400 mt-0.5" />
                   <div>
-                    <p className="text-sm text-indigo-300 font-medium">
+                    <p className="text-sm text-cyan-300 font-medium">
                       How Private Intents Work
                     </p>
                     <ul className="text-xs text-slate-400 mt-2 space-y-1">
@@ -339,7 +339,7 @@ export function PrivateIntent() {
               <Button
                 type="submit"
                 disabled={!connected || isSubmitting}
-                className="w-full h-12 bg-linear-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium rounded-xl transition-all disabled:opacity-50"
+                className="w-full h-12 bg-cyan-600 hover:bg-cyan-500 text-white font-medium rounded-xl transition-all disabled:opacity-50"
               >
                 {!connected ? (
                   "Connect Wallet"
@@ -415,7 +415,7 @@ function StatusItem({
 }) {
   const statusColors = {
     active: "text-green-400",
-    connected: "text-blue-400",
+    connected: "text-cyan-400",
     warning: "text-amber-400",
     inactive: "text-slate-500",
   };

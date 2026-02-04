@@ -9,10 +9,10 @@ import { Zap, BarChart3, Shield } from "lucide-react";
 export function TradingMode() {
   return (
     <Tabs defaultValue="private" className="w-full">
-      <TabsList className="grid w-full grid-cols-3 bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto">
+      <TabsList className=" w-full  bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto">
         <TabsTrigger
           value="swap"
-          className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
+          className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
         >
           <Zap className="h-4 w-4" />
           <span className="hidden sm:inline">Simple Swap</span>
@@ -20,7 +20,7 @@ export function TradingMode() {
         </TabsTrigger>
         <TabsTrigger
           value="advanced"
-          className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
+          className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
         >
           <BarChart3 className="h-4 w-4" />
           <span className="hidden sm:inline">Advanced</span>
@@ -28,7 +28,7 @@ export function TradingMode() {
         </TabsTrigger>
         <TabsTrigger
           value="private"
-          className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
+          className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
         >
           <Shield className="h-4 w-4" />
           <span className="hidden sm:inline">Private Intent</span>

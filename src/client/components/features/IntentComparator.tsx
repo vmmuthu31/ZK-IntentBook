@@ -135,7 +135,7 @@ export function IntentComparator() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-linear-to-r from-amber-500 to-orange-600">
+            <div className="p-2 rounded-xl bg-cyan-600">
               <Sparkles className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -356,13 +356,13 @@ export function IntentComparator() {
             </div>
 
             {savings > 0 && (
-              <div className="p-4 rounded-xl bg-linear-to-r from-green-900/30 to-emerald-900/30 border border-green-500/30">
+              <div className="p-4 rounded-xl bg-cyan-900/30 border border-cyan-500/30">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-sm text-green-300 mb-1">
+                    <div className="text-sm text-cyan-300 mb-1">
                       Estimated Savings with ZK-IntentBook
                     </div>
-                    <div className="text-3xl font-bold text-green-400">
+                    <div className="text-3xl font-bold text-cyan-400">
                       ${savings.toFixed(2)}
                     </div>
                   </div>
@@ -370,7 +370,7 @@ export function IntentComparator() {
                     <div className="text-xs text-slate-400 mb-1">
                       Slippage Reduction
                     </div>
-                    <Badge className="bg-green-500/20 text-green-400">
+                    <Badge className="bg-cyan-500/20 text-cyan-400">
                       {(
                         ((publicMetrics.estimatedSlippage -
                           privateMetrics.estimatedSlippage) /
@@ -389,7 +389,7 @@ export function IntentComparator() {
         <Button
           onClick={runComparison}
           disabled={isLoading}
-          className="w-full bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500"
+          className="w-full bg-cyan-600 hover:bg-cyan-500"
         >
           {isLoading ? (
             <>

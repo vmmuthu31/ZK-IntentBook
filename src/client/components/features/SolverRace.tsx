@@ -392,7 +392,7 @@ export function SolverRace() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600">
+            <div className="p-2 rounded-xl bg-cyan-600">
               <Users className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -488,7 +488,7 @@ export function SolverRace() {
           <Button
             onClick={startRace}
             disabled={isRacing}
-            className="flex-1 bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500"
+            className="flex-1 bg-cyan-600 hover:bg-cyan-500"
           >
             {isRacing ? (
               <>
@@ -514,10 +514,10 @@ export function SolverRace() {
           )}
         </div>
 
-        <div className="p-3 rounded-lg bg-indigo-900/20 border border-indigo-500/20">
+        <div className="p-3 rounded-lg bg-cyan-900/20 border border-cyan-500/20">
           <div className="flex items-start gap-2">
-            <Shield className="h-4 w-4 text-indigo-400 mt-0.5" />
-            <div className="text-xs text-indigo-200">
+            <Shield className="h-4 w-4 text-cyan-400 mt-0.5" />
+            <div className="text-xs text-cyan-200">
               <strong>Decentralized Execution:</strong> Multiple solvers compete
               to fill your intent. Only ZK-verified proofs are accepted,
               ensuring correctness without revealing your trade details.

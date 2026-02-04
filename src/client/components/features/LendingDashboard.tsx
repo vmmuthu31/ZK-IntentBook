@@ -72,7 +72,7 @@ function PoolCard({
 }) {
   return (
     <Card
-      className="bg-zinc-900/50 border-zinc-800 hover:border-blue-500/50 transition-colors cursor-pointer"
+      className="bg-zinc-900/50 border-zinc-800 hover:border-cyan-500/50 transition-colors cursor-pointer"
       onClick={onSelect}
     >
       <CardContent className="p-4">
@@ -83,7 +83,7 @@ function PoolCard({
             </h3>
             <p className="text-sm text-zinc-400">Lending Pool</p>
           </div>
-          <Badge variant="outline" className="text-blue-400 border-blue-400/50">
+          <Badge variant="outline" className="text-cyan-400 border-cyan-400/50">
             {pool.utilizationRate.toFixed(1)}% Utilized
           </Badge>
         </div>
@@ -224,7 +224,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
     <Card className="bg-zinc-900/50 border-zinc-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Coins className="h-5 w-5 text-blue-400" />
+          <Coins className="h-5 w-5 text-cyan-400" />
           Borrow Simulator
         </CardTitle>
       </CardHeader>
@@ -294,7 +294,7 @@ function BorrowSimulator({ pools }: { pools: LendingPoolInfo[] }) {
 
         {loading && (
           <div className="flex items-center justify-center py-4">
-            <Loader2 className="h-6 w-6 animate-spin text-blue-400" />
+            <Loader2 className="h-6 w-6 animate-spin text-cyan-400" />
           </div>
         )}
 
@@ -352,7 +352,7 @@ function InterestRateChart({ pool }: { pool: LendingPoolInfo }) {
     <Card className="bg-zinc-900/50 border-zinc-800">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Percent className="h-5 w-5 text-purple-400" />
+          <Percent className="h-5 w-5 text-cyan-400" />
           Interest Rate Model
         </CardTitle>
       </CardHeader>

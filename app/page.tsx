@@ -26,7 +26,7 @@ export default function Home() {
     <MainLayout>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent mb-4">
             Trade Privately on DeepBook
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -36,52 +36,52 @@ export default function Home() {
         </div>
 
         <Tabs defaultValue="trade" className="w-full">
-          <TabsList className="grid w-full grid-cols-7 bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto mb-8">
+          <TabsList className=" w-full  bg-slate-800/50 border border-white/5 p-1 rounded-xl h-auto mb-8">
             <TabsTrigger
               value="trade"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-indigo-600 data-[state=active]:to-purple-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Shield className="h-4 w-4" />
               <span className="hidden sm:inline">Trade</span>
             </TabsTrigger>
             <TabsTrigger
               value="compare"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-amber-600 data-[state=active]:to-orange-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <BarChart3 className="h-4 w-4" />
               <span className="hidden sm:inline">Compare</span>
             </TabsTrigger>
             <TabsTrigger
               value="lending"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-purple-600 data-[state=active]:to-pink-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Landmark className="h-4 w-4" />
               <span className="hidden sm:inline">Lending</span>
             </TabsTrigger>
             <TabsTrigger
               value="strategies"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-teal-600 data-[state=active]:to-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <TrendingUp className="h-4 w-4" />
               <span className="hidden sm:inline">Strategies</span>
             </TabsTrigger>
             <TabsTrigger
               value="solvers"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-blue-600 data-[state=active]:to-indigo-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Users className="h-4 w-4" />
               <span className="hidden sm:inline">Solvers</span>
             </TabsTrigger>
             <TabsTrigger
               value="referrals"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-green-600 data-[state=active]:to-emerald-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Coins className="h-4 w-4" />
               <span className="hidden sm:inline">Referrals</span>
             </TabsTrigger>
             <TabsTrigger
               value="why-sui"
-              className="flex items-center gap-2 py-3 data-[state=active]:bg-linear-to-r data-[state=active]:from-cyan-600 data-[state=active]:to-blue-600 data-[state=active]:text-white rounded-lg transition-all"
+              className="flex items-center gap-2 py-3 data-[state=active]:bg-cyan-600 data-[state=active]:text-white rounded-lg transition-all"
             >
               <Zap className="h-4 w-4" />
               <span className="hidden sm:inline">Why Sui</span>
@@ -96,9 +96,9 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <IntentComparator />
               <div className="space-y-6">
-                <div className="p-6 rounded-xl bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-500/20">
+                <div className="p-6 rounded-xl bg-slate-800/50 border border-red-500/20">
                   <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Sparkles className="h-5 w-5 text-amber-400" />
+                    <Sparkles className="h-5 w-5 text-red-400" />
                     The MEV Problem
                   </h3>
                   <p className="text-slate-400 text-sm mb-4">
@@ -120,9 +120,9 @@ export default function Home() {
                     </li>
                   </ul>
                 </div>
-                <div className="p-6 rounded-xl bg-gradient-to-br from-green-900/20 to-emerald-900/20 border border-green-500/20">
+                <div className="p-6 rounded-xl bg-slate-800/50 border border-cyan-500/20">
                   <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Shield className="h-5 w-5 text-green-400" />
+                    <Shield className="h-5 w-5 text-cyan-400" />
                     Our Solution
                   </h3>
                   <p className="text-slate-400 text-sm mb-4">
@@ -131,16 +131,16 @@ export default function Home() {
                     verify correct execution.
                   </p>
                   <ul className="space-y-2 text-sm">
-                    <li className="flex items-center gap-2 text-green-300">
-                      <span className="text-green-400">✓</span>
+                    <li className="flex items-center gap-2 text-cyan-300">
+                      <span className="text-cyan-400">✓</span>
                       Intent encryption with hash commitments
                     </li>
-                    <li className="flex items-center gap-2 text-green-300">
-                      <span className="text-green-400">✓</span>
+                    <li className="flex items-center gap-2 text-cyan-300">
+                      <span className="text-cyan-400">✓</span>
                       Competitive solver auction
                     </li>
-                    <li className="flex items-center gap-2 text-green-300">
-                      <span className="text-green-400">✓</span>
+                    <li className="flex items-center gap-2 text-cyan-300">
+                      <span className="text-cyan-400">✓</span>
                       On-chain ZK verification
                     </li>
                   </ul>
@@ -161,9 +161,9 @@ export default function Home() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <SolverRace />
               <div className="space-y-6">
-                <div className="p-6 rounded-xl bg-gradient-to-br from-blue-900/20 to-indigo-900/20 border border-blue-500/20">
+                <div className="p-6 rounded-xl bg-slate-800/50 border border-cyan-500/20">
                   <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                    <Users className="h-5 w-5 text-blue-400" />
+                    <Users className="h-5 w-5 text-cyan-400" />
                     Decentralized Execution
                   </h3>
                   <p className="text-slate-400 text-sm mb-4">
@@ -172,7 +172,7 @@ export default function Home() {
                   </p>
                   <ul className="space-y-3 text-sm">
                     <li className="flex items-start gap-2 text-slate-300">
-                      <span className="text-blue-400 mt-1">1.</span>
+                      <span className="text-cyan-400 mt-1">1.</span>
                       <span>
                         You submit an encrypted intent with a commitment hash
                       </span>

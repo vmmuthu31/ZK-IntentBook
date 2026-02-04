@@ -219,7 +219,7 @@ export default function RoadmapPage() {
     <MainLayout>
       <div className="max-w-4xl mx-auto space-y-8">
         <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold bg-linear-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold bg-linear-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
             Product Roadmap
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -228,7 +228,7 @@ export default function RoadmapPage() {
           </p>
         </div>
 
-        <Card className="border-green-500/20 bg-gradient-to-br from-green-950/50 to-emerald-950/50">
+        <Card className="border-cyan-500/20 bg-cyan-950/30">
           <CardHeader>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-6 w-6 text-green-400" />
@@ -347,7 +347,7 @@ export default function RoadmapPage() {
           ))}
         </div>
 
-        <Card className="border-purple-500/20 bg-gradient-to-br from-purple-950/30 to-indigo-950/30">
+        <Card className="border-cyan-500/20 bg-cyan-950/30">
           <CardContent className="pt-6">
             <div className="text-center space-y-4">
               <h3 className="text-xl font-semibold">
@@ -367,7 +367,7 @@ export default function RoadmapPage() {
                 </a>
                 <a
                   href="#"
-                  className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-sm font-medium transition-colors"
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 rounded-lg text-sm font-medium transition-colors"
                 >
                   Join Discord
                 </a>

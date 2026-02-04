@@ -126,7 +126,7 @@ export function ReferralDashboard() {
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-gradient-to-br from-green-600 to-emerald-600">
+            <div className="p-2 rounded-xl bg-cyan-600">
               <Coins className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -155,8 +155,8 @@ export function ReferralDashboard() {
 
       <CardContent className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-gradient-to-br from-green-900/30 to-emerald-900/30 border border-green-500/20">
-            <div className="flex items-center gap-2 text-sm text-green-300 mb-2">
+          <div className="p-4 rounded-xl bg-cyan-900/30 border border-cyan-500/20">
+            <div className="flex items-center gap-2 text-sm text-cyan-300 mb-2">
               <Coins className="h-4 w-4" />
               Total Fees Earned
             </div>
@@ -282,11 +282,11 @@ export function ReferralDashboard() {
           </Table>
         </div>
 
-        <div className="p-4 rounded-xl bg-linear-to-r from-green-900/20 to-emerald-900/20 border border-green-500/20">
+        <div className="p-4 rounded-xl bg-cyan-900/20 border border-cyan-500/20">
           <div className="flex items-start gap-3">
-            <Sparkles className="h-5 w-5 text-green-400 mt-0.5" />
+            <Sparkles className="h-5 w-5 text-cyan-400 mt-0.5" />
             <div>
-              <h4 className="font-semibold text-green-300 mb-1">
+              <h4 className="font-semibold text-cyan-300 mb-1">
                 Sustainable Revenue Model
               </h4>
               <p className="text-xs text-slate-400">

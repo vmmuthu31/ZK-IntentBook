@@ -51,11 +51,11 @@ export default function DemoPage() {
     <MainLayout>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <Badge className="mb-4 bg-amber-500/20 text-amber-400 border-amber-500/30">
+          <Badge className="mb-4 bg-cyan-500/20 text-cyan-400 border-cyan-500/30">
             <Trophy className="h-3 w-3 mr-1" />
             Judge Demo Mode
           </Badge>
-          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-amber-400 via-orange-400 to-red-400 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl md:text-5xl font-bold bg-linear-to-r from-cyan-400 via-blue-400 to-cyan-300 bg-clip-text text-transparent mb-4">
             ZK-IntentBook Demo
           </h1>
           <p className="text-lg text-slate-400 max-w-2xl mx-auto">
@@ -68,7 +68,7 @@ export default function DemoPage() {
             <Card key={item.step} className="bg-slate-800/50 border-white/5">
               <CardContent className="p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="w-6 h-6 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-400 text-xs font-bold">
+                  <div className="w-6 h-6 rounded-full bg-cyan-500/20 flex items-center justify-center text-cyan-400 text-xs font-bold">
                     {item.step}
                   </div>
                   <span className="text-xs text-slate-500">
@@ -95,10 +95,10 @@ export default function DemoPage() {
           <ReferralDashboard />
         </div>
 
-        <Card className="bg-gradient-to-br from-amber-900/20 to-orange-900/20 border border-amber-500/20">
+        <Card className="bg-cyan-900/20 border border-cyan-500/20">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">
-              <FileText className="h-5 w-5 text-amber-400" />
+              <FileText className="h-5 w-5 text-cyan-400" />
               60-Second Demo Script
             </CardTitle>
           </CardHeader>
@@ -130,9 +130,9 @@ export default function DemoPage() {
                 &quot;The frontend earns referral fees. The user gets privacy.
                 DeepBook keeps its liquidity.&quot;
               </p>
-              <div className="pt-4 border-t border-amber-500/20">
+              <div className="pt-4 border-t border-cyan-500/20">
                 <p className="font-bold text-white text-lg">
-                  <Sparkles className="h-5 w-5 inline mr-2 text-amber-400" />
+                  <Sparkles className="h-5 w-5 inline mr-2 text-cyan-400" />
                   ZK-IntentBook: Private trading infrastructure for Sui.
                 </p>
               </div>
